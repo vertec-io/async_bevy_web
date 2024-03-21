@@ -1,10 +1,8 @@
 use std::{env, net::{SocketAddr, ToSocketAddrs}};
-
 use axum::{Router, routing::get};
 use bevy::prelude::*;
-
-
-
+use bevy_tokio_tasks::TokioTasksRuntime;
+use dotenv::dotenv;
 
 #[derive(Component)]
 pub struct WebServerPlugin;
@@ -36,9 +34,13 @@ impl Default for WebServer {
     }
 }
 
-
-fn start_server(mut server: ResMut<WebServer>) {
+fn start_server(runtime: ResMut<TokioTasksRuntime>, mut server: ResMut<WebServer>) {
     //READ environment variables for the host and port and update the server address
+    dotenv().ok();
+    for (key, value) in env::vars() {
+        println!("{}: {}", key, value);
+    }
+    
     let host = env::var("HOST").unwrap_or_else(|_| "127.0.0.1".to_string());
     let port = env::var("PORT").unwrap_or_else(|_| "3000".to_string()).parse::<u32>().unwrap_or(3000);
     let server_name = env::var("SERVER_NAME").unwrap_or_else(|_| "Axum Server".to_string());
@@ -47,27 +49,23 @@ fn start_server(mut server: ResMut<WebServer>) {
     server.port = port;
     server.server_name = server_name;
     server.socket = Some(format!("{}:{}", host, port));
-    println!("Starting the server at host {} on port {}", &server.address, &server.port);
+    println!("Starting {} at host {} on port {}", &server.server_name, &server.address, &server.port);
 
+    // Need to clone the server data to move it into the background task without affecting
+    // the world state
     let server_clone = server.clone();
-
-    std::thread::spawn(move || {
-        //initialize tracing
-        tracing_subscriber::fmt::init();
+    
+    runtime.spawn_background_task(|mut _ctx| async move {
+        let server_clone = (move || (server_clone))();
+        println!("{} successfully started on {}",&server_clone.server_name, &server_clone.address);
         
-        let runtime = tokio::runtime::Runtime::new().expect("Could not start the server async runtime");
-        runtime.block_on(async move {
-            // build our application with a route
-        let axum_app = Router::new()
-            // `GET /` goes to `root`
-            .route("/", get(root));
-            
         let listener = tokio::net::TcpListener::bind(&server_clone.address).await.expect("Could not create TCP Listener");
-        println!("Axum server successfully started on {}", &server_clone.address);
+        let axum_app = Router::new()
+        .route("/", get(root));
+
         axum::serve(listener, axum_app)
             .await
             .expect("Server shut down unexpectedly");
-    });
     });
 }
 

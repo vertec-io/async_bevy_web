@@ -1,0 +1,17 @@
+[package]
+name = "web-server"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+bevy = {version = "0.13.0",default-features = false, features=["dynamic_linking"]}
+tokio = { version = "1", features = ["rt-multi-thread"] }
+axum = "0.7.4"
+bevy-tokio-tasks = {path = "../bevy_tokio_tasks"}
+dotenv = "0.15.0"
+
+[dev-dependencies]
+bevy = { version = "0.13.0", default-features = false, features = ["dynamic_linking"] }
+tokio = { version = "1", features = ["time"] }
