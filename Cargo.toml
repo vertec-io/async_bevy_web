@@ -1,9 +1,7 @@
-[package]
-name = "async_bevy_web"
-version = "0.1.0"
-edition = "2021"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+# [package]
+# name = "async_bevy_web"
+# version = "0.1.0"
+# edition = "2021"
 
 [workspace]
 members = [
@@ -11,8 +9,7 @@ members = [
     "crates/web_server",
     "crates/ecs_core",
 ]
-
-[dependencies]
+resolver = "2"
 
 [profile.dev]
 opt-level = 1
