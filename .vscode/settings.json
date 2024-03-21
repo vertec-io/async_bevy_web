@@ -1,0 +1,5 @@
+{
+    "rust-analyzer.linkedProjects": [
+        "./crates/ecs_core/Cargo.toml"
+    ]
+}
