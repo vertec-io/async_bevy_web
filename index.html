@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Test</title>
+    <style>
+        #messages {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-top: 10px;
+            height: 200px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <h2>WebSocket Test</h2>
+    <div>
+        WebSocket Address: <input type="text" id="ws-address" value="ws://localhost:8080" />
+        <button onclick="connect()">Connect</button>
+    </div>
+    <div>
+        Message: <input type="text" id="message" />
+        <button onclick="sendMessage()">Send</button>
+    </div>
+    <div id="messages"></div>
+
+    <script>
+        var ws;
+        const maxMessages = 50;
+
+        function connect() {
+            var address = document.getElementById('ws-address').value;
+            ws = new WebSocket(address);
+
+            ws.onopen = function() {
+                addMessage("Connected to " + address);
+            };
+
+            ws.onmessage = function(event) {
+                addMessage("Received: " + event.data);
+            };
+
+            ws.onclose = function() {
+                addMessage("Connection closed");
+            };
+
+            ws.onerror = function(error) {
+                addMessage("Error: " + error);
+            };
+        }
+
+        function sendMessage() {
+            var message = document.getElementById('message').value;
+            if (ws) {
+                ws.send(message);
+                addMessage("Sent: " + message);
+            } else {
+                addMessage("Connection not established.");
+            }
+        }
+
+        function addMessage(message) {
+            var messagesDiv = document.getElementById('messages');
+            var newMessageDiv = document.createElement("div");
+            newMessageDiv.innerHTML = message;
+
+            // Add the new message
+            messagesDiv.appendChild(newMessageDiv);
+
+            // Remove the oldest messages if the maximum is exceeded
+            while (messagesDiv.children.length > maxMessages) {
+                messagesDiv.removeChild(messagesDiv.firstChild);
+            }
+
+            messagesDiv.scrollTop = messagesDiv.scrollHeight; // Scroll to bottom
+        }
+    </script>
+</body>
+</html>

@@ -1,8 +1,11 @@
 // use std::time::Duration;
 use bevy::{app::ScheduleRunnerPlugin,prelude::*};
 use bevy_tokio_tasks::{TokioTasksPlugin, TokioTasksRuntime};
-use web_server::WebServerPlugin;
+use web_server::{WebServerPlugin, WebServer};
+
 use std::time::Duration;
+
+use axum::extract::ws::Message;
 
 const FRAME_RATE:f64 = 60.0;
 fn main() {
@@ -18,13 +21,16 @@ fn main() {
         .run();
 }
 
-fn demo(runtime: ResMut<TokioTasksRuntime>) {
-    // commands.spawn(Camera2dBundle::default());
+fn demo(runtime: ResMut<TokioTasksRuntime>, server: ResMut<WebServer>) {
+    let tx_sender = server.tx.clone();
     runtime.spawn_background_task(|mut _ctx| async move {
         let mut index = 0;
         loop {
             
-            println!("Seconds elapsed on a background thread {:?}", index);
+            let msg = format!("Seconds elapsed on a background thread {:?}", index);
+            println!("{msg}");
+            
+            let _ = tx_sender.send(Message::Text(msg));
             
             index += 1;
             tokio::time::sleep(Duration::from_secs(1)).await;
@@ -54,8 +60,14 @@ fn countdown(
     app_time.0.tick(time.delta());
 }
 
-fn time_done(app_time: Res<AppTime>){
+fn time_done(app_time: Res<AppTime>, runtime: ResMut<TokioTasksRuntime>, server: ResMut<WebServer>){
     if app_time.0.finished() {
-        println!("Five more seconds have elapsed on the main thread");
+        let msg = "Five more seconds have elapsed on the main thread".to_string();
+        println!("{msg}");
+        let tx_sender = server.tx.clone();
+        
+        runtime.spawn_background_task(|mut _ctx| async move {
+            let _ = tx_sender.send(Message::Text(msg));
+        });
     }
 }
