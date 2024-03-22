@@ -4,78 +4,156 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WebSocket Test</title>
-    <style>
-        #messages {
-            border: 1px solid #ccc;
-            padding: 10px;
-            margin-top: 10px;
-            height: 200px;
-            overflow-y: auto;
-        }
-    </style>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body>
-    <h2>WebSocket Test</h2>
-    <div>
-        WebSocket Address: <input type="text" id="ws-address" value="ws://localhost:8080" />
-        <button onclick="connect()">Connect</button>
-    </div>
-    <div>
-        Message: <input type="text" id="message" />
-        <button onclick="sendMessage()">Send</button>
-    </div>
-    <div id="messages"></div>
+<body class="min-h-screen flex flex-col ">
+    <div class="h-screen flex flex-col gap-2">
+        <div class="border-b p-4 flex items-center">
+            <h1 class="text-2xl font-semibold">WebSocket Tester</h1>
+            <button id="connect" onclick="connect()" class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 ml-auto w-[100px]"
+            >
+            Connect
+            </button >
+            <button id="disconnect" onclick="disconnect()" class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 w-[100px] ml-4"
+            >
+            Disconnect
+            </button>
+            <input id="address" class="flex h-10 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 w-[300px] max-w-full ml-4" placeholder="WebSocket URL" type="url">
+                <span id="connectionstatus"class="w-3 h-3 rounded-full ml-4 bg-gray-400"></span>
+        </div>
+        
+        <div id="messages" class="flex-1 overflow-y-scroll border rounded-lg p-4 mx-4 flex flex-col-reverse gap-2">        
+        </div>
 
+        <div class="mx-4">
+            <h1 class="text-xl font-semibold">Message</h1>
+            <div class="flex justify-between min-h-5 align-middle">
+                
+ 
+                    <textarea class="flex border rounded-lg mb-4 p-4 flex-1 flex flex-col-reverse gap-4 overflow-y-scroll" type="text" id="message" ></textarea>
+                                <div ></div>
+                <button id="sendMessage" onclick="sendMessage()" class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 w-[100px] ml-4"
+                    >
+                    Send
+                </button>
+            </div>
+        </div>
+        
+
+    </div>
+    
     <script>
+        var maxMessages = 50;
         var ws;
-        const maxMessages = 50;
+        var connectionStatus = document.getElementById('connectionstatus');
+        var connectButton = document.getElementById('connect');
+        var disconnectButton = document.getElementById('disconnect');
+        var wsInput = document.getElementById('address');
+
+        var messagesContainer = document.getElementById('messages')//document.querySelector('.flex-1.flex.flex-col-reverse.gap-4');
+
+        function disconnect() {
+            console.log("DISCONNECTING")
+            if (ws) {
+                ws.close();
+            }
+        }
 
         function connect() {
-            var address = document.getElementById('ws-address').value;
+            console.log("CONNECTING")
+            updateConnectionStatus('connecting')
+            var address = wsInput.value;
             ws = new WebSocket(address);
 
             ws.onopen = function() {
-                addMessage("Connected to " + address);
+                updateConnectionStatus('connected');
+                addMessage("< Opened connection", 'text-green-500');
             };
 
             ws.onmessage = function(event) {
-                addMessage("Received: " + event.data);
+                flashMessageIndicator();
+                addMessage(event.data, 'text-blue-500');
             };
 
             ws.onclose = function() {
-                addMessage("Connection closed");
+                updateConnectionStatus('disconnected');
+                addMessage("> Closed connection", 'text-gray-500');
             };
 
             ws.onerror = function(error) {
-                addMessage("Error: " + error);
+                console.log({error})
+                updateConnectionStatus('error');
+                addMessage(`Could not connect to ${address}`, 'text-red-500');
             };
+        }
+
+        function flashMessageIndicator() {
+            connectionStatus.classList.remove('bg-gray-400', 'bg-green-500', 'bg-red-500', 'bg-yellow-500');
+            connectionStatus.classList.add('bg-blue-500');
+            setTimeout(() => {
+                updateConnectionStatus(ws.readyState);
+            }, 250);
+        }
+
+        function updateConnectionStatus(status) {
+            connectionStatus.classList.remove('bg-gray-400', 'bg-green-500', 'bg-red-500', 'bg-yellow-500', 'bg-blue-500');
+            switch (status) {
+                case 'connecting':addMessage
+                    connectionStatus.classList.add('bg-yellow-500');
+                    break;
+                case 'error':
+                    connectionStatus.classList.add('bg-red-500');
+                    break;
+                case 'disconnected':
+                case WebSocket.CLOSED:
+                    connectionStatus.classList.add('bg-gray-400');
+                    break;
+                case 'connected':
+                case WebSocket.OPEN:
+                    connectionStatus.classList.add('bg-green-500');
+                    break;
+                
+                default:
+                    connectionStatus.classList.add('bg-gray-400');
+            }
+        }
+
+        function addMessages(message, textStyle) {
+            var newMessageDiv = document.createElement("div");
+            newMessageDiv.className = textStyle;
+            newMessageDiv.textContent = message;
+            messagesContainer.insertBefore(newMessageDiv, messagesContainer.firstChild);
+        }
+
+        function addMessage(message, textStyle) {
+            var newMessageDiv = document.createElement("div");
+            newMessageDiv.className = textStyle;
+            newMessageDiv.textContent = message;
+            // Add the new message
+
+            messagesContainer.insertBefore(newMessageDiv, messagesContainer.firstChild);
+
+            // Remove the oldest messages if the maximum is exceeded
+            console.log(messagesContainer.children.length)
+            while (messagesContainer.children.length > maxMessages) {
+                messagesContainer.removeChild(messagesContainer.lastChild);
+            }
+
+            messagesContainer.scrollTop = messagesContainer.scrollHeight; // Scroll to bottom
         }
 
         function sendMessage() {
             var message = document.getElementById('message').value;
             if (ws) {
                 ws.send(message);
-                addMessage("Sent: " + message);
+                addMessage("Sent: " + message, 'text-indigo-700 font-bold');
+                document.getElementById('message').value = "";
             } else {
-                addMessage("Connection not established.");
+                updateConnectionStatus('error')
+                addMessage("Connection not established.", 'text-red-500');
             }
-        }
-
-        function addMessage(message) {
-            var messagesDiv = document.getElementById('messages');
-            var newMessageDiv = document.createElement("div");
-            newMessageDiv.innerHTML = message;
-
-            // Add the new message
-            messagesDiv.appendChild(newMessageDiv);
-
-            // Remove the oldest messages if the maximum is exceeded
-            while (messagesDiv.children.length > maxMessages) {
-                messagesDiv.removeChild(messagesDiv.firstChild);
-            }
-
-            messagesDiv.scrollTop = messagesDiv.scrollHeight; // Scroll to bottom
         }
     </script>
+
 </body>
 </html>
