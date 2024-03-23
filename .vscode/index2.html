@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Test</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/htmx.org"></script>
+    <script src="https://unpkg.com/htmx.org/dist/ext/ws.js"></script> <!-- HTMX WebSocket extension -->
+</head>
+<body class="min-h-screen flex flex-col">
+    <div class="h-screen flex flex-col gap-2">
+        <div class="border-b p-4 flex items-center">
+            <h1 class="text-2xl font-semibold">WebSocket Tester</h1>
+            <!-- Connect and Disconnect are now managed via HTMX and WebSocket extension -->
+            <button hx-ws="connect:ws://127.0.0.1:8000/ws" class="ml-auto w-[100px]">Connect</button>
+            <button hx-ws="disconnect" class="ml-4 w-[100px]">Disconnect</button>
+            <!-- WebSocket URL is now predefined, so input for it might not be necessary unless for dynamic purposes -->
+        </div>
+        
+        <div id="messages" hx-ws="message:append:#messages" class="flex-1 overflow-y-scroll border rounded-lg p-4 mx-4 flex flex-col-reverse gap-2">
+            <!-- Messages will be automatically appended here -->
+        </div>
+
+        <div class="mx-4">
+            <h1 class="text-xl font-semibold">Message</h1>
+            <div class="flex justify-between min-h-5 align-middle">
+                <!-- Send message via WebSocket -->
+                <textarea id="message" class="flex-1 border rounded-lg mb-4 p-4 overflow-y-scroll"></textarea>
+                <button hx-post="ws://127.0.0.1:8080/ws" hx-trigger="click" hx-include="#message" hx-swap="outerHTML" class="ml-4 w-[100px]">Send</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
