@@ -41,7 +41,7 @@ pub async fn websocket_handler(
     println!("`{user_agent} at {addr} connected to {}.",state.server_name);
 
     // Finalize the upgrade process by returning upgrade callback.
-    // We can customize the callback by sending additional infor such as address
+    // We can customize the callback by sending additional info such as address
     ws.on_upgrade(move |socket| handle_socket(socket, addr, state))
 }
 
@@ -59,7 +59,7 @@ async fn handle_socket(mut socket: WebSocket, who: SocketAddr, state: Arc<WebSer
             println!("Client {who} abruptly disconnected");
             return;
         }
-        // TODO: Authenticate the user here, replace the sleep with authentication tasks
+        // TODO: Authenticate the user here
         if let authenticated = authenticate_websocket_client(who, state.clone()).await {
             if socket.send(Message::Text(format!("Hello {who}! Welcome to {}",&state.server_name)))
                 .await
@@ -68,18 +68,19 @@ async fn handle_socket(mut socket: WebSocket, who: SocketAddr, state: Arc<WebSer
                     return;
                 }
 
-            //TODO: Load user settings, etc....
+        //TODO: Load user settings, etc....
         } else {
             if socket.send(Message::Text(format!("Hello {who}! Welcome to {}",&state.server_name)))
                 .await
                 .is_err() {
-                    println!("Client {who} could not be authenticated. Disconnecting");
+                    println!("Client {who} abruptly disconnected");
                     return;
                 }   
         }
 
         // Split the websocket stream into a sender (sink) and receiver (stream)A
         // See example : https://gist.github.com/hexcowboy/8ebcf13a5d3b681aa6c684ad51dd6e0c
+        //      NOTE: the link above is a solution for this general question: https://github.com/tokio-rs/axum/discussions/1159
         let (mut sink, mut stream) = socket.split();
         // Create an mpsc channel so we can send messages to the sink from multiple threads
         let (sender, mut receiver) = mpsc::channel::<Message>(32);
