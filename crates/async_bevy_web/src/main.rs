@@ -62,10 +62,15 @@ fn countdown(
 
 fn time_done(app_time: Res<AppTime>, runtime: ResMut<TokioTasksRuntime>, server: ResMut<WebServer>){
     if app_time.0.finished() {
+        // Print a message on in the bevy runtime locally
         let msg = "Five more seconds have elapsed on the main thread".to_string();
         println!("{msg}");
-        let tx_sender = server.tx.clone();
+
+        // Send a message to the webserver clients
+        let _ = server.tx.send(Message::Text(msg.clone()));
         
+        //Alternatively send the server message in a background thread:
+        let tx_sender = server.tx.clone();
         runtime.spawn_background_task(|mut _ctx| async move {
             let _ = tx_sender.send(Message::Text(msg));
         });

@@ -1,13 +1,8 @@
-# [package]
-# name = "async_bevy_web"
-# version = "0.1.0"
-# edition = "2021"
-
 [workspace]
 members = [
     "crates/bevy_tokio_tasks",
     "crates/web_server",
-    "crates/ecs_core",
+    "crates/async_bevy_web",
 ]
 resolver = "2"
 

@@ -1,5 +1,5 @@
 [package]
-name = "ecs_core"
+name = "async_bevy_web"
 version = "0.1.0"
 edition = "2021"
 
