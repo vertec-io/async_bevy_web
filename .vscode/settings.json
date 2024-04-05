@@ -1,5 +1,5 @@
 {
     "rust-analyzer.linkedProjects": [
-        "./crates/async_bevy_web/Cargo.toml"
+        "./crates/example_app/Cargo.toml"
     ]
 }

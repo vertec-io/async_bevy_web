@@ -184,6 +184,24 @@ dependencies = [
 ]
 
 [[package]]
+name = "async-bevy-web"
+version = "0.1.0"
+dependencies = [
+ "axum",
+ "bevy",
+ "bevy-tokio-tasks",
+ "bevy_framepace",
+ "leptos",
+ "serde",
+ "serde_json",
+ "tokio",
+ "tokio-tungstenite",
+ "tracing",
+ "tracing-subscriber",
+ "web-server",
+]
+
+[[package]]
 name = "async-broadcast"
 version = "0.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -268,23 +286,6 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn 2.0.58",
-]
-
-[[package]]
-name = "async_bevy_web"
-version = "0.1.0"
-dependencies = [
- "axum",
- "bevy",
- "bevy-tokio-tasks",
- "leptos",
- "serde",
- "serde_json",
- "tokio",
- "tokio-tungstenite",
- "tracing",
- "tracing-subscriber",
- "web-server",
 ]
 
 [[package]]
@@ -642,6 +643,21 @@ checksum = "df72ac1273fcdb8105736c42815442ae1291f1f577e34cb7e9d18f732103e2f0"
 dependencies = [
  "bevy_macro_utils",
  "encase_derive_impl",
+]
+
+[[package]]
+name = "bevy_framepace"
+version = "0.15.0"
+dependencies = [
+ "bevy",
+ "bevy_app",
+ "bevy_diagnostic",
+ "bevy_ecs",
+ "bevy_log",
+ "bevy_reflect",
+ "bevy_time",
+ "bevy_utils",
+ "spin_sleep",
 ]
 
 [[package]]
@@ -1639,6 +1655,24 @@ checksum = "332f51cb23d20b0de8458b86580878211da09bcd4503cb579c225b3d124cabb3"
 dependencies = [
  "event-listener 5.2.0",
  "pin-project-lite",
+]
+
+[[package]]
+name = "example_app"
+version = "0.1.0"
+dependencies = [
+ "async-bevy-web",
+ "axum",
+ "bevy",
+ "bevy-tokio-tasks",
+ "leptos",
+ "serde",
+ "serde_json",
+ "tokio",
+ "tokio-tungstenite",
+ "tracing",
+ "tracing-subscriber",
+ "web-server",
 ]
 
 [[package]]
@@ -3520,6 +3554,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "05ffd9c0a93b7543e062e759284fcf5f5e3b098501104bfbdde4d404db792871"
 dependencies = [
  "libc",
+ "windows-sys 0.52.0",
+]
+
+[[package]]
+name = "spin_sleep"
+version = "1.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "368a978649eaf70006b082e79c832bd72556ac1393eaf564d686e919dca2347f"
+dependencies = [
  "windows-sys 0.52.0",
 ]
 
