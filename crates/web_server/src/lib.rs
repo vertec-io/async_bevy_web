@@ -31,6 +31,7 @@ impl Plugin for WebServerPlugin{
     }
 }
 
+
 #[derive(Resource, Clone)]
 pub struct WebServer {
     pub address: SocketAddr,
@@ -57,10 +58,12 @@ impl Default for WebServer {
 fn start_server(runtime: ResMut<TokioTasksRuntime>, mut server: ResMut<WebServer>) {
     //READ environment variables for the host and port and update the server address
     dotenv().ok();    
+    // let host = env::var("HOST").unwrap();
     let host = env::var("HOST").unwrap_or_else(|_| "127.0.0.1".to_string());
     let port = env::var("PORT").unwrap_or_else(|_| "3000".to_string()).parse::<u32>().unwrap_or(3000);
     let server_name = env::var("SERVER_NAME").unwrap_or_else(|_| "Axum Server".to_string());
     let new_addr = format!("{}:{}", host, port).to_socket_addrs().expect("Unable to parse socket address host and port").next().expect("Could not parse socket address and port");
+
     println!("Environment Variables for server:\n NAME: {}:\n HOST: {} \n PORT: {}", &server_name, &host, &port);
     
     server.address = new_addr;
