@@ -5,10 +5,10 @@ use bevy_tokio_tasks::TokioTasksPlugin;
 use web_server::WebServerPlugin;
 use bevy_framepace::FramepacePlugin;
 
-use leptos::expect_context;
+// use leptos::expect_context;
 // use web_server::{WebServerPlugin};
 
-use std::{sync::{Arc,Mutex}, time::Duration};
+// use std::{sync::{Arc,Mutex}, time::Duration};
 
 #[derive(Resource, Debug)]
 pub struct FrameRate {
@@ -31,24 +31,18 @@ impl Default for FrameRate {
     }
 }
 
-pub trait DataLayer{
+pub trait Config{
     fn with_frame_rate(self, frame_rate: f64) -> Self;
     fn with_default_config(self)-> Self;
 }
 
-impl DataLayer for App{
+impl Config for App{
     fn with_frame_rate(mut self, frame_rate: f64) -> Self {
          self
          .add_plugins(FramepacePlugin)
          .insert_resource(FrameRate::new(frame_rate))
          .add_systems(PostStartup, setup);
 
-        //  .add_plugins(
-        //      MinimalPlugins
-        //             .set(ScheduleRunnerPlugin::run_loop(
-        //             Duration::from_secs_f64(1./frame_rate)
-        //             ))
-        //     );
         self
     }
     
