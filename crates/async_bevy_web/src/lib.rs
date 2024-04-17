@@ -2,6 +2,7 @@ use bevy::{app::{PluginGroupBuilder,
     // ScheduleRunnerPlugin
 }, prelude::*};
 use bevy_tokio_tasks::TokioTasksPlugin;
+// use leptos::IntoView;
 use web_server::WebServerPlugin;
 use bevy_framepace::FramepacePlugin;
 
@@ -31,9 +32,14 @@ impl Default for FrameRate {
     }
 }
 
+#[derive(Resource, Debug)]
+pub struct LeptosApp;
+
 pub trait Config{
     fn with_frame_rate(self, frame_rate: f64) -> Self;
     fn with_default_config(self)-> Self;
+    fn with_leptos_app(self ) -> Self;
+    fn start(self) -> Self;
 }
 
 impl Config for App{
@@ -49,6 +55,17 @@ impl Config for App{
     fn with_default_config(mut self ) -> Self {
         self.add_plugins(MinimalPlugins)
             .add_plugins(AsyncBevyWebPlugins);
+        // .add_plugins(WebServerPlugin::default(new));
+        self
+    }
+
+    fn with_leptos_app(mut self) -> Self {
+        self.insert_resource(LeptosApp {});
+        self
+    }
+
+    fn start(mut self) -> Self {
+        self.add_plugins(WebServerPlugin);
         self
     }
 }
@@ -64,6 +81,6 @@ impl PluginGroup for AsyncBevyWebPlugins {
     fn build(self) -> PluginGroupBuilder {
         PluginGroupBuilder::start::<Self>()
             .add(TokioTasksPlugin::default())
-            .add(WebServerPlugin)
+            // .add(WebServerPlugin)
             }
 }

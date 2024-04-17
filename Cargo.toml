@@ -3,8 +3,11 @@ members = [
     "crates/bevy_tokio_tasks",
     "crates/web_server",
     "crates/async_bevy_web", 
-    "crates/example_app",
+    "crates/example-ssr-app",
     "crates/bevy_framepace"
+]
+exclude = [
+    "crates/example_app"
 ]
 resolver = "2"
 
