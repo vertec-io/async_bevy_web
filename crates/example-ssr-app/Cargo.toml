@@ -20,6 +20,9 @@ wasm-bindgen = "=0.2.92"
 thiserror = "1"
 tracing = { version = "0.1", optional = true }
 http = "1"
+bevy-tokio-tasks = {path = "../bevy_tokio_tasks"}
+web-server = {path = "../web_server"}
+async-bevy-web = {path = "../async_bevy_web"}
 
 [features]
 hydrate = ["leptos/hydrate", "leptos_meta/hydrate", "leptos_router/hydrate"]
