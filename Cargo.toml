@@ -2,13 +2,14 @@
 members = [
     "crates/bevy_tokio_tasks",
     "crates/web_server",
-    "crates/async_bevy_web", 
-    "crates/example-ssr-app",
+    "crates/async_bevy_web",
     "crates/bevy_framepace"
 ]
 exclude = [
-    "crates/example_app"
+    "crates/example_app",
+    "crates/example-ssr-app",
 ]
+
 resolver = "2"
 
 [profile.dev]
