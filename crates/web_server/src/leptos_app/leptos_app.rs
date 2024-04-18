@@ -3,8 +3,7 @@ use bevy_tokio_tasks::TokioTasksRuntime;
 use leptos::*;
 use leptos_axum::generate_route_list_with_exclusions_and_ssg_and_context;
 use leptos_router::build_static_routes_with_additional_context;
-// use crate::web_server::WebServer;
-// use crate::web_server::websocket::websocket_handler;
+
 use crate::server::web_server::WebServer;
 use crate::server::websocket::websocket_handler;
 
@@ -13,20 +12,19 @@ use std::net::SocketAddr;
 use axum::{
     routing::get,
     Router,
-    // extract::ws::Message
 };
-use tower_http::{
-    // services::ServeDir,
-    trace::{DefaultMakeSpan, TraceLayer},
-};
+use tower_http::trace::{DefaultMakeSpan, TraceLayer};
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
 use crate::AppState;
 
-// Implement the LeptosView trait for any type that implements the bounds
-// for Leptos and Bevy
+// Implement the LeptosView trait for any type that implements the bounds for Leptos and Bevy
 pub trait LeptosView: IntoView + Send + Sync + 'static + Clone +Copy {}
 impl<T> LeptosView for T where T: IntoView + Send + Sync + 'static + Clone +Copy {}
+// pub trait BevySafe: Send + Sync + 'static + Clone + Copy {}
+
+// impl<T> BevySafe for T where T: IntoView {}
+// pub trait LeptosView: IntoView + BevySafe{}
 
 
 #[derive(Resource, Debug, Clone, Copy)]
@@ -78,6 +76,13 @@ where
 {
     
     // Need to clone the server data to move it into the background task
+    // Data from the server will communicate with Bevy over the channel
+    // The socket connection will send serialized data from the client 
+    // to communicate event types, data, status, etc.
+    // We will use Bevy's event system will be used to trigger system
+    // execution in the ECS. These systems will handle updating state, 
+    // and returning data back to the client via the channel, which will get
+    // relayed back via the websocket
     let server_clone = Arc::new(server.clone());
     let leptos_app_clone = Arc::new(leptos_app.clone());
     
@@ -105,10 +110,12 @@ where
     
         // Build static routes in a separate thread
         std::thread::spawn(move || {
+            println!("Building static routes...");
             let rt = tokio::runtime::Builder::new_current_thread()
                 .enable_all()
                 .build()
                 .unwrap();
+                // .expect("Could not start a runtime to load static assets");
 
             rt.block_on(async {
                 build_static_routes_with_additional_context(
@@ -143,6 +150,7 @@ where
                                 .route("/", get(root))
                                 .route("/ws",get(websocket_handler))
                                 .with_state(app_state)
+                                // .fallback() <-- Need to add a fallback to my LeptosApp
                                 .layer( //Logging setup
                                     TraceLayer::new_for_http()
                                         .make_span_with(DefaultMakeSpan::default().include_headers(true)),

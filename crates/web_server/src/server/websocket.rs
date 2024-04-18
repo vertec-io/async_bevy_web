@@ -128,7 +128,7 @@ async fn handle_socket(mut socket: WebSocket, who: SocketAddr, state: Extension<
                     .is_err() {
                         println!("User disconnected");
                         break;
-                    }       
+                    }
             }
         }); 
 

@@ -73,6 +73,6 @@ impl PluginGroup for AsyncBevyWebPlugins {
     fn build(self) -> PluginGroupBuilder {
         PluginGroupBuilder::start::<Self>()
             .add(TokioTasksPlugin::default())
-            // .add(WebServerPlugin)
+            .add(WebServerPlugin)
             }
 }
