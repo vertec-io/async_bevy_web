@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use bevy_tokio_tasks::TokioTasksRuntime;
 use leptos::*;
-use leptos_axum::generate_route_list_with_exclusions_and_ssg_and_context;
+use leptos_axum::{generate_route_list_with_exclusions_and_ssg_and_context, LeptosRoutes};
 use leptos_router::build_static_routes_with_additional_context;
 
 use crate::server::web_server::WebServer;
@@ -95,6 +95,7 @@ where
         let leptos_app_clone = (move || leptos_app_clone)();
         let app_fn = leptos_app_clone.app_fn;
         let app_fn_clone = app_fn.clone();
+        let app_fn_clone2 = app_fn.clone();
 
         let conf = get_configuration(None).await.unwrap();
         let leptos_options = conf.leptos_options;
@@ -106,8 +107,13 @@ where
         );
         
         let leptos_options_clone = leptos_options.clone();
+        let leptos_options_clone2 = leptos_options.clone();
+
         let routes_clone = routes.clone();
+        let routes_clone2 = routes.clone();
+
         println!("Leptos Options: {:?}", &leptos_options);
+        println!("Generated routes: {:?}", &routes_clone.clone());
         // Build static routes in a separate thread
         std::thread::spawn(move || {
             println!("Building static routes...");
@@ -127,6 +133,7 @@ where
                         )
                         .await
                         .expect("Failed to build static routes")
+
             })
         });
 
@@ -149,7 +156,8 @@ where
         let axum_app: Router = Router::new()
                                 .route("/", get(root))
                                 .route("/ws",get(websocket_handler))
-                                .with_state(app_state)
+                                .leptos_routes(&leptos_options_clone2, routes_clone2, move || app_fn_clone2)
+                                .with_state(leptos_options_clone2)
                                 // .fallback() <-- Need to add a fallback to my LeptosApp
                                 .layer( //Logging setup
                                     TraceLayer::new_for_http()

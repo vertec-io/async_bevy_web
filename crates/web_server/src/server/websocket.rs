@@ -5,6 +5,7 @@ use axum::{
 };
 
 use axum_extra::TypedHeader;
+use leptos::expect_context;
 use std::borrow::Cow;
 use std::ops::ControlFlow;
 use std::path::PathBuf;
@@ -30,8 +31,9 @@ pub async fn websocket_handler(
     ws: WebSocketUpgrade,
     user_agent: Option<TypedHeader<headers::UserAgent>>,
     ConnectInfo(addr): ConnectInfo<SocketAddr>,
-    state: Extension<Arc<WebServer>>        
+    // state: Extension<Arc<WebServer>>        
 ) -> impl IntoResponse {
+    let state = expect_context::<Arc<WebServer>>();
     println!("Handling a new websocket connection!");
     let user_agent = if let Some(TypedHeader(user_agent)) = user_agent {
         user_agent.to_string()
@@ -46,7 +48,7 @@ pub async fn websocket_handler(
 }
 
 /// Actual websocket statemachine (one will be spawned per connection)
-async fn handle_socket(mut socket: WebSocket, who: SocketAddr, state: Extension<Arc<WebServer>>) {
+async fn handle_socket(mut socket: WebSocket, who: SocketAddr, state: Arc<WebServer>) {
 
     // Since each client gets individual websocket statemachine, we can pause handling
     // when necessary to wait from some external event. Here is where we can perform housekeeping 
@@ -139,7 +141,7 @@ async fn handle_socket(mut socket: WebSocket, who: SocketAddr, state: Extension<
         };
 }
 
-async fn authenticate_websocket_client(who: SocketAddr, state: Extension<Arc<WebServer>>) -> bool {
+async fn authenticate_websocket_client(who: SocketAddr, state: Arc<WebServer>) -> bool {
         println!("Checking if user {who} is authenticated by {}", &state.server_name);
         // TODO: Authenticate the user here, replace the sleep with authentication tasks
         tokio::time::sleep(std::time::Duration::from_millis(250)).await;
