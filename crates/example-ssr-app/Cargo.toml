@@ -1,10 +1,9 @@
 [package]
-name = "example-ssr-app"
+name = "example_ssr_app_lib"
 version = "0.1.0"
 edition = "2021"
 
 [lib]
-name = "example_ssr_app_lib"
 crate-type = ["cdylib", "rlib"]
 
 [[bin]]
@@ -36,41 +35,6 @@ ssr = [
     "dep:tokio",
     "dep:tower",
     "dep:tower-http",
-    "dep:leptos_axum",
-    "leptos/ssr",
-    "leptos_meta/ssr",
-    "leptos_router/ssr",
-    "dep:tracing"
-]
-
-# Defines a size-optimized profile for the WASM bundle in release mode
-[profile.wasm-release]
-inherits = "release"
-opt-level = 'z'
-lto = true
-codegen-units = 1
-panic = "abort"
-
-ssr = [
-    "dep:axum",
-    "dep:tokio",
-    "dep:tower",
-    "dep:tower-http",
-    "dep:leptos_axum",
-    "leptos/ssr",
-    "leptos_meta/ssr",
-    "leptos_router/ssr",
-    "dep:tracing",
-]
-
-# Defines a size-optimized profile for the WASM bundle in release mode
-[profile.wasm-release]
-inherits = "release"
-opt-level = 'z'
-lto = true
-codegen-units = 1
-panic = "abort"
-
     "dep:leptos_axum",
     "leptos/ssr",
     "leptos_meta/ssr",
@@ -147,3 +111,4 @@ lib-default-features = false
 #
 # Optional. Defaults to "release".
 lib-profile-release = "wasm-release"
+
