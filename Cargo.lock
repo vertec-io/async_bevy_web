@@ -1738,7 +1738,9 @@ dependencies = [
 name = "example-ssr-app"
 version = "0.1.0"
 dependencies = [
+ "async-bevy-web",
  "axum",
+ "bevy-tokio-tasks",
  "console_error_panic_hook",
  "http 1.1.0",
  "leptos",
@@ -1751,6 +1753,7 @@ dependencies = [
  "tower-http",
  "tracing",
  "wasm-bindgen",
+ "web-server",
 ]
 
 [[package]]
