@@ -107,7 +107,7 @@ where
         
         let leptos_options_clone = leptos_options.clone();
         let routes_clone = routes.clone();
-    
+        println!("Leptos Options: {:?}", &leptos_options);
         // Build static routes in a separate thread
         std::thread::spawn(move || {
             println!("Building static routes...");
