@@ -9,6 +9,9 @@ edition = "2021"
 bevy = {version = "0.13.0",default-features = false, features=["dynamic_linking"]}
 axum = {version = "0.7.4", features = ["ws"]}
 axum-extra = {version="0.9.2", features=["typed-header"]}
+leptos = "0.6.9"
+leptos_axum = {version = "0.6"}
+leptos_router = {version = "0.6"}
 dotenv = "0.15.0"
 headers = "0.4.0"
 tokio = { version = "1", features = ["full"] }

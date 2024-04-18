@@ -4,9 +4,7 @@ use bevy_tokio_tasks::TokioTasksPlugin;
 
 use web_server::WebServerPlugin;
 use bevy_framepace::FramepacePlugin;
-// use leptos::IntoView;
-// use leptos::expect_context;
-// use web_server::{WebServerPlugin};
+
 
 #[derive(Resource, Debug)]
 pub struct FrameRate {
@@ -29,13 +27,10 @@ impl Default for FrameRate {
     }
 }
 
-#[derive(Resource, Debug)]
-pub struct LeptosApp;
-
 pub trait Config{
     fn with_frame_rate(self, frame_rate: f64) -> Self;
     fn with_default_config(self)-> Self;
-    fn with_leptos_app(self ) -> Self;
+    // fn with_leptos_app(self ) -> Self;
     fn start(self) -> Self;
 }
 
@@ -56,10 +51,10 @@ impl Config for App{
         self
     }
 
-    fn with_leptos_app(mut self) -> Self {
-        self.insert_resource(LeptosApp {});
-        self
-    }
+    // fn with_leptos_app(mut self) -> Self {
+    //     self.insert_resource(LeptosApp {});
+    //     self
+    // }
 
     fn start(mut self) -> Self {
         self.add_plugins(WebServerPlugin);

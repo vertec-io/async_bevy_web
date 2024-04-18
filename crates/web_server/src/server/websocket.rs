@@ -23,14 +23,14 @@ use axum::extract::ws::CloseFrame;
 use futures::{sink::SinkExt, stream::StreamExt};
 use tokio::sync::mpsc;
 
-use crate::WebServer;
+use crate::web_server::WebServer;
 
 pub async fn websocket_handler(
     
     ws: WebSocketUpgrade,
     user_agent: Option<TypedHeader<headers::UserAgent>>,
     ConnectInfo(addr): ConnectInfo<SocketAddr>,
-    State(state): State<Arc<WebServer>>
+    state: Extension<Arc<WebServer>>        
 ) -> impl IntoResponse {
     println!("Handling a new websocket connection!");
     let user_agent = if let Some(TypedHeader(user_agent)) = user_agent {
@@ -46,7 +46,7 @@ pub async fn websocket_handler(
 }
 
 /// Actual websocket statemachine (one will be spawned per connection)
-async fn handle_socket(mut socket: WebSocket, who: SocketAddr, state: Arc<WebServer>) {
+async fn handle_socket(mut socket: WebSocket, who: SocketAddr, state: Extension<Arc<WebServer>>) {
 
     // Since each client gets individual websocket statemachine, we can pause handling
     // when necessary to wait from some external event. Here is where we can perform housekeeping 
@@ -139,7 +139,7 @@ async fn handle_socket(mut socket: WebSocket, who: SocketAddr, state: Arc<WebSer
         };
 }
 
-async fn authenticate_websocket_client(who: SocketAddr, state: Arc<WebServer>) -> bool {
+async fn authenticate_websocket_client(who: SocketAddr, state: Extension<Arc<WebServer>>) -> bool {
         println!("Checking if user {who} is authenticated by {}", &state.server_name);
         // TODO: Authenticate the user here, replace the sleep with authentication tasks
         tokio::time::sleep(std::time::Duration::from_millis(250)).await;
