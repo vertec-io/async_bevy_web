@@ -7,6 +7,7 @@ use tokio::sync::broadcast;
 #[derive(Component)]
 pub struct WebServerPlugin;
 
+// #[cfg(feature = "ssr")]
 impl Plugin for WebServerPlugin{
     fn build(&self, app: &mut App) {
         app

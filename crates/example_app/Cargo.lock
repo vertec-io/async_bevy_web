@@ -1486,10 +1486,13 @@ dependencies = [
  "leptos_macro",
  "leptos_reactive",
  "leptos_server",
+ "serde",
+ "serde_json",
  "server_fn",
  "tracing",
  "typed-builder",
  "typed-builder-macro",
+ "wasm-bindgen",
  "web-sys",
 ]
 
@@ -1639,6 +1642,7 @@ dependencies = [
  "cfg-if",
  "futures",
  "indexmap",
+ "js-sys",
  "paste",
  "pin-project",
  "rustc-hash",
@@ -1650,7 +1654,9 @@ dependencies = [
  "thiserror",
  "tokio",
  "tracing",
+ "wasm-bindgen",
  "wasm-bindgen-futures",
+ "web-sys",
 ]
 
 [[package]]
@@ -3095,13 +3101,13 @@ dependencies = [
  "axum",
  "axum-extra",
  "bevy",
- "bevy-tokio-tasks",
  "dotenv",
  "futures",
  "futures-util",
  "headers",
  "leptos",
  "leptos_axum",
+ "leptos_meta",
  "leptos_router",
  "tokio",
  "tokio-tungstenite",

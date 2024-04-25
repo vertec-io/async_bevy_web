@@ -13,5 +13,10 @@ bevy = {workspace = true}
 serde = "1.0.197"
 serde_json = "1.0.114"
 bevy-tokio-tasks = {path = "../bevy_tokio_tasks"}
-web-server = {path = "../web_server"}
+web-server = {path = "../web_server", features = ['ssr','hydrate']}
 bevy_framepace = {path = "../bevy_framepace"}
+
+
+[features]
+hydrate = ["web-server/hydrate"]
+ssr = ["web-server/ssr"]

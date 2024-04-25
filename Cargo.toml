@@ -6,7 +6,8 @@ members = [
     "crates/bevy_framepace"
 ]
 exclude = [
-    "crates/example_app",
+    # "crates/example_app",
+    # "crates/example-ssr-app",
 ]
 
 resolver = "2"
@@ -27,7 +28,3 @@ debug = false
 
 [workspace.dependencies]
 bevy = {version = "0.13.0",default-features = false}
-
-[workspace.features]
-hydrate = ["web_server/hydrate"]
-ssr = ["web_server/ssr"]
