@@ -187,21 +187,11 @@ dependencies = [
 name = "async-bevy-web"
 version = "0.1.0"
 dependencies = [
- "axum",
  "bevy",
  "bevy-tokio-tasks",
  "bevy_framepace",
- "leptos",
- "leptos_axum",
- "leptos_router",
  "serde",
  "serde_json",
- "tokio",
- "tokio-tungstenite",
- "tower",
- "tower-http",
- "tracing",
- "tracing-subscriber",
  "web-server",
 ]
 

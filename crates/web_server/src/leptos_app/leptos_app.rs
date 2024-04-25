@@ -16,7 +16,7 @@ use axum::{
 use tower_http::trace::{DefaultMakeSpan, TraceLayer};
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
-use crate::AppState;
+// use crate::AppState;
 
 // Implement the LeptosView trait for any type that implements the bounds for Leptos and Bevy
 pub trait LeptosView: IntoView + Send + Sync + 'static + Clone +Copy {}
@@ -89,7 +89,7 @@ where
     runtime.spawn_background_task(|mut _ctx| async move {
         let server_clone = (move || (server_clone))();    
         let server_clone2 = server_clone.clone();
-        let server_clone3 = server_clone.clone();
+        // let server_clone3 = server_clone.clone();
         let socket_address = server_clone.address.clone();
 
         let leptos_app_clone = (move || leptos_app_clone)();
@@ -136,11 +136,6 @@ where
 
             })
         });
-
-        let app_state = AppState{
-            server: server_clone3,
-            leptos_options
-        };
 
         tracing_subscriber::registry()
         .with(

@@ -9,34 +9,9 @@ crate-type = ["lib"]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-axum = "0.7.4"
-bevy = {version = "0.13.0",default-features = false}#, features=["dynamic_linking"]}
-leptos = "0.6.9"
-leptos_axum = {version = "0.6"}
-leptos_router = {version = "0.6"}
+bevy = {workspace = true}
 serde = "1.0.197"
 serde_json = "1.0.114"
-tokio = {version="1.36.0", features = ["rt-multi-thread"]}
-tokio-tungstenite = "0.21.0"
-tracing = "0.1.40"
-tracing-subscriber = "0.3.18"
-
-tower = {version = "0.4", features = ["util"]}
-tower-http = {version = "0.5.2", features = ["fs", "trace"]}
-
 bevy-tokio-tasks = {path = "../bevy_tokio_tasks"}
 web-server = {path = "../web_server"}
 bevy_framepace = {path = "../bevy_framepace"}
-
-
-# [profile.dev]
-# opt-level = 1
-
-# [profile.dev.package."*"]
-# opt-level = 3
-
-# [profile.release]
-# opt-level = 3
-# strip = true
-# lto = true
-# codegen-units = 1
