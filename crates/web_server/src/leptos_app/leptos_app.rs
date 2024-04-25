@@ -16,6 +16,16 @@ use axum::{
 use tower_http::trace::{DefaultMakeSpan, TraceLayer};
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
+use axum::{
+    body::Body,
+    extract::State,
+    http::{Request, Response, StatusCode, Uri},
+    response::IntoResponse,
+};
+use tower::ServiceExt;
+use tower_http::services::ServeDir;
+use axum::response::Response as AxumResponse;
+// use tokio::task;
 // use crate::AppState;
 
 // Implement the LeptosView trait for any type that implements the bounds for Leptos and Bevy
@@ -115,27 +125,44 @@ where
         println!("Leptos Options: {:?}", &leptos_options);
         println!("Generated routes: {:?}", &routes_clone.clone());
         // Build static routes in a separate thread
-        std::thread::spawn(move || {
-            println!("Building static routes...");
-            let rt = tokio::runtime::Builder::new_current_thread()
-                .enable_all()
-                .build()
-                .unwrap();
-                // .expect("Could not start a runtime to load static assets");
+        // std::thread::spawn(move || {
+        //     println!("Building static routes...");
+        //     let rt = tokio::runtime::Builder::new_current_thread()
+        //         .enable_all()
+        //         .build()
+        //         // .unwrap();
+        //         .expect("Could not start a runtime to load static assets");
 
-            rt.block_on(async {
-                build_static_routes_with_additional_context(
-                            &leptos_options_clone,
-                            move || {app_fn_clone},
-                            move || provide_context(server_clone2.clone()),
-                            &routes_clone.clone(), 
-                            &static_data_map
-                        )
-                        .await
-                        .expect("Failed to build static routes")
+        //     rt.block_on(async {
+        //         build_static_routes_with_additional_context(
+        //                     &leptos_options_clone,
+        //                     move || {app_fn_clone},
+        //                     move || provide_context(server_clone2.clone()),
+        //                     &routes_clone.clone(), 
+        //                     &static_data_map
+        //                 )
+        //                 .await
+        //                 .expect("Failed to build static routes")
 
-            })
-        });
+        //     })
+        // });
+        // let local = task::LocalSet::new();
+        // let app_fn_clone = app_fn.clone();
+        // let leptos_options_clone = leptos_options.clone();
+        // let routes_clone = routes.clone();
+        // local
+        //     .run_until(async move {
+        //         build_static_routes_with_additional_context(
+        //             &leptos_options_clone,
+        //             move || {app_fn_clone},
+        //             move || provide_context(server_clone2.clone()),
+        //             &routes_clone.clone(),
+        //             &static_data_map,
+        //         )
+        //         .await
+        //         .expect("Failed to build static routes")
+        //     })
+        //     .await;
 
         tracing_subscriber::registry()
         .with(
@@ -152,8 +179,8 @@ where
                                 // .route("/", get(root))
                                 .route("/ws",get(websocket_handler))
                                 .leptos_routes(&leptos_options_clone2, routes_clone2, move || app_fn_clone2)
+                                .fallback(file_and_error_handler)
                                 .with_state(leptos_options_clone2)
-                                // .fallback() <-- Need to add a fallback to my LeptosApp
                                 .layer( //Logging setup
                                     TraceLayer::new_for_http()
                                         .make_span_with(DefaultMakeSpan::default().include_headers(true)),
@@ -167,3 +194,38 @@ where
 // async fn root() -> &'static str {
 //     "Hello World! The application doesn't have anything on the root url"
 // }
+
+pub async fn file_and_error_handler(
+    uri: Uri,
+    State(options): State<LeptosOptions>,
+    _req: Request<Body>,
+) -> AxumResponse {
+    let root = options.site_root.clone();
+    let res = get_static_file(uri.clone(), &root).await.unwrap();
+    if res.status() == StatusCode::NOT_FOUND {
+        // try with `.html`
+        let uri_html = format!("{}.html", uri).parse().unwrap();
+        get_static_file(uri_html, &root)
+            .await
+            .unwrap()
+            .into_response()
+    } else {
+        res.into_response()
+    }
+}
+
+async fn get_static_file(uri: Uri, root: &str) -> Result<Response<Body>, (StatusCode, String)> {
+    let req = Request::builder()
+        .uri(uri.clone())
+        .body(Body::empty())
+        .unwrap();
+    // `ServeDir` implements `tower::Service` so we can call it with `tower::ServiceExt::oneshot`
+    // This path is relative to the cargo root
+    match ServeDir::new(root).oneshot(req).await {
+        Ok(res) => Ok(res.into_response()),
+        Err(err) => Err((
+            StatusCode::INTERNAL_SERVER_ERROR,
+            format!("Something went wrong: {err}"),
+        )),
+    }
+}

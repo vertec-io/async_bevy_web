@@ -27,38 +27,29 @@ impl Default for FrameRate {
     }
 }
 
-pub trait Config{
-    fn with_frame_rate(self, frame_rate: f64) -> Self;
-    fn with_default_config(self)-> Self;
-    // fn with_leptos_app(self ) -> Self;
-    fn start(self) -> Self;
+pub struct ABWConfigPlugin {
+    frame_rate: f64,
 }
 
-impl Config for App{
-    fn with_frame_rate(mut self, frame_rate: f64) -> Self {
-         self
-         .add_plugins(FramepacePlugin)
-         .insert_resource(FrameRate::new(frame_rate))
-         .add_systems(PostStartup, setup);
-
-        self
+impl Default for ABWConfigPlugin {
+    fn default() -> Self {
+        Self {frame_rate: 60.0}
     }
-    
-    fn with_default_config(mut self ) -> Self {
-        self.add_plugins(MinimalPlugins)
+}
+
+impl ABWConfigPlugin{
+    pub fn new(frame_rate: f64) -> Self{
+        Self { frame_rate }
+    }
+}
+
+impl Plugin for ABWConfigPlugin {
+    fn build(&self, app: &mut App) {
+        app.add_plugins(FramepacePlugin)
+            .insert_resource(FrameRate::new(self.frame_rate))
+            .add_systems(PostStartup, setup)
+            .add_plugins(MinimalPlugins)
             .add_plugins(AsyncBevyWebPlugins);
-        // .add_plugins(WebServerPlugin::default(new));
-        self
-    }
-
-    // fn with_leptos_app(mut self) -> Self {
-    //     self.insert_resource(LeptosApp {});
-    //     self
-    // }
-
-    fn start(mut self) -> Self {
-        self.add_plugins(WebServerPlugin);
-        self
     }
 }
 

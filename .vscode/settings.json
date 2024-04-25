@@ -2,5 +2,4 @@
     "rust-analyzer.linkedProjects": [
         "./crates/async_bevy_web/Cargo.toml"
     ],
-    "rust-analyzer.cargo.features": ["ssr"]
 }

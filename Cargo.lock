@@ -2401,7 +2401,6 @@ dependencies = [
  "tracing",
  "typed-builder",
  "typed-builder-macro",
- "wasm-bindgen",
  "web-sys",
 ]
 
@@ -2551,7 +2550,6 @@ dependencies = [
  "cfg-if",
  "futures",
  "indexmap",
- "js-sys",
  "paste",
  "pin-project",
  "rustc-hash",
@@ -2563,9 +2561,7 @@ dependencies = [
  "thiserror",
  "tokio",
  "tracing",
- "wasm-bindgen",
  "wasm-bindgen-futures",
- "web-sys",
 ]
 
 [[package]]

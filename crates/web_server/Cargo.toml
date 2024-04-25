@@ -13,9 +13,9 @@ bevy = {workspace = true}
 axum = {version = "0.7.4", features = ["ws"]}
 axum-extra = {version="0.9.2", features=["typed-header"]}
 # leptos = "0.6.9"
-leptos = { version = "0.6", features = ["ssr","hydrate","experimental-islands"] }
-leptos_axum = {version = "0.6", optional = true}
-leptos_router = {version = "0.6", optional = true}
+leptos = { version = "0.6", features = ["experimental-islands"] }
+leptos_axum = {version = "0.6", features = ["experimental-islands"]}
+leptos_router = {version = "0.6"}
 leptos_meta = { version = "0.6" }
 dotenv = "0.15.0"
 headers = "0.4.0"
@@ -31,20 +31,20 @@ futures-util = {version = "0.3.30", default-features = false, features = ["sink"
 bevy-tokio-tasks = {path = "../bevy_tokio_tasks"}
 
 
-[features]
-hydrate = ["leptos/hydrate", "leptos_meta/hydrate", "leptos_router/hydrate"]
-ssr = [
-    # "dep:bevy",
-    # "dep:axum",
-    # "dep:tokio",
-    # "dep:tower",
-    # "dep:tower-http",
-    "dep:leptos_axum",
-    "leptos/ssr",
-    "leptos_meta/ssr",
-    "leptos_router/ssr",
-    # "dep:tracing",
-]
+# [features]
+# hydrate = ["leptos/hydrate", "leptos_meta/hydrate", "leptos_router/hydrate"]
+# ssr = [
+#     # "dep:bevy",
+#     # "dep:axum",
+#     # "dep:tokio",
+#     # "dep:tower",
+#     # "dep:tower-http",
+#     "dep:leptos_axum",
+#     "leptos/ssr",
+#     "leptos_meta/ssr",
+#     "leptos_router/ssr",
+#     # "dep:tracing",
+# ]
 
 [dev-dependencies]
 bevy = { version = "0.13.0", default-features = false }
