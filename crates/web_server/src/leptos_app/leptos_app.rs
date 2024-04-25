@@ -154,7 +154,7 @@ where
 
         println!("Starting server on a new thread, listening at {}", &socket_address);
         let axum_app: Router = Router::new()
-                                .route("/", get(root))
+                                // .route("/", get(root))
                                 .route("/ws",get(websocket_handler))
                                 .leptos_routes(&leptos_options_clone2, routes_clone2, move || app_fn_clone2)
                                 .with_state(leptos_options_clone2)
@@ -169,6 +169,6 @@ where
     });
 }
 
-async fn root() -> &'static str {
-    "Hello World! The application doesn't have anything on the root url"
-}
+// async fn root() -> &'static str {
+//     "Hello World! The application doesn't have anything on the root url"
+// }
