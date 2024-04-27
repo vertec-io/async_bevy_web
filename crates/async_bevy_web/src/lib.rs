@@ -21,7 +21,7 @@ trait DataLayer {
         system: &mut BoxedSystem<I,R>,
         input: I,
     ) -> R;
-    fn run_system<S, I, R, T>(&mut self, system:S, input: I) -> R
+    fn run_user_system<S, I, R, T>(&mut self, system:S, input: I) -> R
     where
         S: IntoSystem<I, R, T>,
         R: 'static,
@@ -49,7 +49,7 @@ impl DataLayer for World {
         to_return
     }
 
-    fn run_system<S, I, R, T>(&mut self, system:S, input: I) -> R
+    fn run_user_system<S, I, R, T>(&mut self, system:S, input: I) -> R
         where
             S: IntoSystem<I, R, T>,
             R: 'static,
@@ -60,6 +60,54 @@ impl DataLayer for World {
     }
 
 }
+pub async fn use_resource<R: Resource + Clone> () -> Option<R>{
+    // let world = expect_context::<Arc<Mutex<World>>>();
+    // let world_lock = world.lock().unwrap();
+    // world_lock.get_resource::<R>().cloned()
+    let ctx = expect_context::<Arc<Mutex<TaskContext>>>();
+    let mut ctx = ctx.lock().unwrap();
+    ctx.run_on_main_thread(move |ctx| {
+        ctx.world.get_resource::<R>().cloned()
+    }).await
+}
+pub async fn expect_resource<R: Resource + Clone>() -> R {
+    use_resource::<R>().await.unwrap_or_else(||{
+        panic!("Expected resource {}, but it didn't exist", type_name::<R>())
+    })
+}
+
+pub async fn run_system_with_input<S, I, R, T>(system: S, input: I) -> R
+where
+    S: Send + IntoSystem<I, R, T> + 'static,
+    R: Send + 'static,
+    I: Send + 'static
+{
+    let ctx = expect_context::<Arc<Mutex<TaskContext>>>();
+    let mut ctx = ctx.lock().unwrap();
+    ctx.run_on_main_thread(move |ctx| {
+        ctx.world.run_user_system(system, input)
+    }).await
+    // ctx.run_user_system(system, input)
+}
+
+pub async fn run_system<S, R, T>(system: S) -> R
+where
+    S: IntoSystem<(), R, T> + Send + 'static,
+    R: Send + 'static,
+{
+    run_system_with_input(system, ()).await
+}
+
+
+// pub fn run_system<S, R, T>(system:S) -> R
+//     where
+//         S: IntoSystem<(), R, T>,
+//         R: 'static,
+// (
+    
+// )
+
+
 #[derive(Component, Clone)]
 pub struct FileName(pub String);
 

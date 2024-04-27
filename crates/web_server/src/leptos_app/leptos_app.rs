@@ -3,7 +3,7 @@ use bevy_tokio_tasks::TokioTasksRuntime;
 use leptos::*;
 use leptos_axum::{generate_route_list_with_exclusions_and_ssg_and_context, LeptosRoutes};
 use leptos_router::build_static_routes_with_additional_context;
-use tokio::task::LocalSet;
+// use tokio::task::LocalSet;
 
 use crate::server::web_server::WebServer;
 use crate::server::websocket::websocket_handler;
@@ -85,7 +85,7 @@ where
 fn start_leptos_app<F>(
     runtime: ResMut<TokioTasksRuntime>, 
     server: Res<WebServer>, 
-    leptos_app:Res<LeptosApp<F>>
+    leptos_app:Res<LeptosApp<F>>,
 )
 where
     F: LeptosView +'static + Clone
@@ -104,7 +104,7 @@ where
     
     runtime.spawn_background_task(|ctx| async move {
         let server_clone = (move || (server_clone))();    
-        let server_clone2 = server_clone.clone();
+        // let server_clone2 = server_clone.clone();
         // let server_clone3 = server_clone.clone();
         let socket_address = server_clone.address.clone();
         let context = Arc::new(Mutex::new(ctx));
