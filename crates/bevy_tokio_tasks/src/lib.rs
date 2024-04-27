@@ -183,8 +183,8 @@ pub struct MainThreadContext<'a> {
 /// [`TokioTasksRuntime`].
 #[derive(Clone)]
 pub struct TaskContext {
-    update_watch_rx: tokio::sync::watch::Receiver<()>,
-    update_run_tx: tokio::sync::mpsc::UnboundedSender<MainThreadCallback>,
+    pub update_watch_rx: tokio::sync::watch::Receiver<()>,
+    pub update_run_tx: tokio::sync::mpsc::UnboundedSender<MainThreadCallback>,
     ticks: Arc<AtomicUsize>,
 }
 

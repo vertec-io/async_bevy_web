@@ -192,6 +192,7 @@ dependencies = [
  "bevy_framepace",
  "serde",
  "serde_json",
+ "tokio",
  "web-server",
 ]
 

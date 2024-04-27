@@ -3,11 +3,12 @@ use bevy_tokio_tasks::TokioTasksRuntime;
 use leptos::*;
 use leptos_axum::{generate_route_list_with_exclusions_and_ssg_and_context, LeptosRoutes};
 use leptos_router::build_static_routes_with_additional_context;
+use tokio::task::LocalSet;
 
 use crate::server::web_server::WebServer;
 use crate::server::websocket::websocket_handler;
 
-use std::sync::Arc;
+use std::sync::{Arc, Mutex};
 use std::net::SocketAddr;
 use axum::{
     routing::get,
@@ -15,6 +16,7 @@ use axum::{
 };
 use tower_http::trace::{DefaultMakeSpan, TraceLayer};
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
+
 
 use axum::{
     body::Body,
@@ -80,7 +82,11 @@ where
     }
 }
 
-fn start_leptos_app<F>(runtime: ResMut<TokioTasksRuntime>, server: Res<WebServer>, leptos_app:Res<LeptosApp<F>>)
+fn start_leptos_app<F>(
+    runtime: ResMut<TokioTasksRuntime>, 
+    server: Res<WebServer>, 
+    leptos_app:Res<LeptosApp<F>>
+)
 where
     F: LeptosView +'static + Clone
 {
@@ -96,12 +102,13 @@ where
     let server_clone = Arc::new(server.clone());
     let leptos_app_clone = Arc::new(leptos_app.clone());
     
-    runtime.spawn_background_task(|mut _ctx| async move {
+    runtime.spawn_background_task(|ctx| async move {
         let server_clone = (move || (server_clone))();    
         let server_clone2 = server_clone.clone();
         // let server_clone3 = server_clone.clone();
         let socket_address = server_clone.address.clone();
-
+        let context = Arc::new(Mutex::new(ctx));
+        let context_clone = context.clone();
         let leptos_app_clone = (move || leptos_app_clone)();
         let app_fn = leptos_app_clone.app_fn;
         let app_fn_clone = app_fn.clone();
@@ -113,7 +120,7 @@ where
         let (routes, static_data_map) = generate_route_list_with_exclusions_and_ssg_and_context(
             move || {app_fn_clone}, 
             Some(vec!["/ws".into()]), 
-            move || provide_context(server_clone.clone())
+            move || provide_context(context.clone())
         );
         
         let leptos_options_clone = leptos_options.clone();
@@ -125,28 +132,28 @@ where
         println!("Leptos Options: {:?}", &leptos_options);
         println!("Generated routes: {:?}", &routes_clone.clone());
         // Build static routes in a separate thread
-        // std::thread::spawn(move || {
-        //     println!("Building static routes...");
-        //     let rt = tokio::runtime::Builder::new_current_thread()
-        //         .enable_all()
-        //         .build()
-        //         // .unwrap();
-        //         .expect("Could not start a runtime to load static assets");
+        std::thread::spawn(move || {
+            println!("Building static routes...");
+            let rt = tokio::runtime::Builder::new_current_thread()
+                .enable_all()
+                .build()
+                // .unwrap();
+                .expect("Could not start a runtime to load static assets");
 
-        //     rt.block_on(async {
-        //         build_static_routes_with_additional_context(
-        //                     &leptos_options_clone,
-        //                     move || {app_fn_clone},
-        //                     move || provide_context(server_clone2.clone()),
-        //                     &routes_clone.clone(), 
-        //                     &static_data_map
-        //                 )
-        //                 .await
-        //                 .expect("Failed to build static routes")
+            rt.block_on(async {
+                build_static_routes_with_additional_context(
+                            &leptos_options_clone,
+                            move || {app_fn_clone},
+                            move || provide_context(context_clone.clone()),
+                            &routes_clone.clone(), 
+                            &static_data_map
+                        )
+                        .await
+                        .expect("Failed to build static routes")
 
-        //     })
-        // });
-        // let local = task::LocalSet::new();
+            })
+        });
+        // let local = LocalSet::new();
         // let app_fn_clone = app_fn.clone();
         // let leptos_options_clone = leptos_options.clone();
         // let routes_clone = routes.clone();
