@@ -131,32 +131,33 @@ where
         println!("Leptos Options: {:?}", &leptos_options);
         println!("Generated routes: {:?}", &routes_clone.clone());
         // Build static routes in a separate thread
-        let (tx, rx) = std::sync::mpsc::channel();
+        // let (tx, rx) = std::sync::mpsc::channel();
 
-        std::thread::spawn(move || {
-            println!("Building static routes...");
-            let rt = tokio::runtime::Builder::new_current_thread()
-                .enable_all()
-                .build()
-                // .unwrap();
-                .expect("Could not start a runtime to load static assets");
+        // std::thread::spawn(move || {
+        //     println!("Building static routes...");
+        //     let rt = tokio::runtime::Builder::new_current_thread()
+        //         .enable_all()
+        //         .build()
+        //         // .unwrap();
+        //         .expect("Could not start a runtime to load static assets");
 
-            rt.block_on(async {
-                build_static_routes_with_additional_context(
-                            &leptos_options_clone,
-                            move || {app_fn_clone},
-                            move || provide_context(context_clone.clone()),
-                            &routes_clone.clone(), 
-                            &static_data_map
-                        )
-                        .await
-                        .expect("Failed to build static routes")
+        //     rt.block_on(async {
+        //         build_static_routes_with_additional_context(
+        //                     &leptos_options_clone,
+        //                     move || {app_fn_clone},
+        //                     move || provide_context(context_clone.clone()),
+        //                     &routes_clone.clone(), 
+        //                     &static_data_map
+        //                 )
+        //                 .await
+        //                 .expect("Failed to build static routes")
 
-            });
-            tx.send("Completed building routes.").expect("Failed to build static routes");
-        });
+        //     });
+        //     tx.send("Completed building routes.").expect("Failed to build static routes");
+        // });
 
-        let _ = rx.recv().expect("Did not receive any static routes");
+        // let received = rx.recv().expect("Did not receive any static routes");
+        // println!("{}",received);
         
 
         // let local = LocalSet::new();
