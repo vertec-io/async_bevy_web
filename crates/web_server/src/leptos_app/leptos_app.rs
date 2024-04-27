@@ -3,6 +3,7 @@ use bevy_tokio_tasks::TokioTasksRuntime;
 use leptos::*;
 use leptos_axum::{generate_route_list_with_exclusions_and_ssg_and_context, LeptosRoutes};
 use leptos_router::build_static_routes_with_additional_context;
+use tokio::task::LocalSet;
 // use tokio::task::LocalSet;
 
 use crate::server::web_server::WebServer;
@@ -104,8 +105,6 @@ where
     
     runtime.spawn_background_task(|ctx| async move {
         let server_clone = (move || (server_clone))();    
-        // let server_clone2 = server_clone.clone();
-        // let server_clone3 = server_clone.clone();
         let socket_address = server_clone.address.clone();
         let context = Arc::new(Mutex::new(ctx));
         let context_clone = context.clone();
@@ -132,6 +131,8 @@ where
         println!("Leptos Options: {:?}", &leptos_options);
         println!("Generated routes: {:?}", &routes_clone.clone());
         // Build static routes in a separate thread
+        let (tx, rx) = std::sync::mpsc::channel();
+
         std::thread::spawn(move || {
             println!("Building static routes...");
             let rt = tokio::runtime::Builder::new_current_thread()
@@ -151,25 +152,27 @@ where
                         .await
                         .expect("Failed to build static routes")
 
-            })
+            });
+            tx.send("Completed building routes.").expect("Failed to build static routes");
         });
+
+        let _ = rx.recv().expect("Did not receive any static routes");
+        
+
         // let local = LocalSet::new();
-        // let app_fn_clone = app_fn.clone();
-        // let leptos_options_clone = leptos_options.clone();
-        // let routes_clone = routes.clone();
         // local
         //     .run_until(async move {
-        //         build_static_routes_with_additional_context(
-        //             &leptos_options_clone,
-        //             move || {app_fn_clone},
-        //             move || provide_context(server_clone2.clone()),
-        //             &routes_clone.clone(),
-        //             &static_data_map,
-        //         )
-        //         .await
-        //         .expect("Failed to build static routes")
-        //     })
-        //     .await;
+            // build_static_routes_with_additional_context(
+            //     &leptos_options_clone,
+            //     move || {app_fn_clone},
+            //     move || provide_context(context_clone.clone()),
+            //     &routes_clone.clone(),
+            //     &static_data_map,
+            // )
+            // .await
+            // .expect("Failed to build static routes");
+            // })
+            // .await;
 
         tracing_subscriber::registry()
         .with(
@@ -197,10 +200,6 @@ where
             .expect("Server shut down unexpectedly");
     });
 }
-
-// async fn root() -> &'static str {
-//     "Hello World! The application doesn't have anything on the root url"
-// }
 
 pub async fn file_and_error_handler(
     uri: Uri,
