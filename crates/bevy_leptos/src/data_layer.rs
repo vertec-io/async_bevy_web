@@ -10,7 +10,6 @@ use leptos::expect_context;
 use crate::generator::dyn_generator::AppState;
 
 #[cfg(feature="generator")]
-// #[server]
 pub async fn use_resource<R: Resource + Clone> () ->Option<R>{
 
     let mut state = expect_context::<AppState>();

@@ -6,9 +6,6 @@ use bevy_ecs::prelude::{Resource, Res, ResMut};
 use bevy_tokio_tasks::TokioTasksPlugin;
 
 #[cfg(feature = "generator")]
-use web_server::WebServerPlugin;
-
-#[cfg(feature = "generator")]
 use bevy_framepace::FramepacePlugin;
 
 #[derive(Resource, Debug)]
@@ -72,6 +69,5 @@ impl PluginGroup for AsyncBevyWebPlugins {
     fn build(self) -> PluginGroupBuilder {
         PluginGroupBuilder::start::<Self>()
             .add(TokioTasksPlugin::default())
-            .add(WebServerPlugin)
             }
 }

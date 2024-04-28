@@ -15,6 +15,8 @@ use generator::static_generator::start_leptos_app;
 
 #[cfg(feature="generator")]
 pub mod server;
+#[cfg(feature="generator")]
+use server::WebServerPlugin;
 
 pub trait LeptosView: IntoView + Send + Sync + 'static + Clone +Copy {}
 impl<T> LeptosView for T where T: IntoView + Send + Sync + 'static + Clone +Copy {}
@@ -59,6 +61,9 @@ where
     fn build(&self, app: &mut App) {
         app.insert_resource(self.leptos_app.clone())
             .add_systems(PostStartup, start_leptos_app::<F>);
+
+        #[cfg(feature="generator")]
+        app.add_plugins(WebServerPlugin);
     }
 }
 

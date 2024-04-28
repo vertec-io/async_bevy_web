@@ -1,13 +1,11 @@
 [workspace]
 members = [
     "crates/bevy_tokio_tasks",
-    "crates/web_server",
     "crates/async_bevy_web",
     "crates/bevy_framepace"
 ]
 exclude = [
     "crates/example_app",
-    # "crates/example-ssr-app",
 ]
 
 resolver = "2"

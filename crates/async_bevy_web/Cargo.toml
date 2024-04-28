@@ -11,30 +11,20 @@ crate-type = ["lib"]
 [dependencies]
 bevy_app.workspace = true
 bevy_ecs.workspace = true
-serde_json = "1.0.114"
-
-serde = { version = "1", features = ["derive"], optional = true }
-ron = { version = "0.8.1", optional = true}
 
 bevy-tokio-tasks = {path = "../bevy_tokio_tasks", optional = true}
-web-server = {path = "../web_server", optional = true}
 bevy_framepace = {path = "../bevy_framepace", optional = true}
 bevy-leptos = {path = "../bevy_leptos"}
 
 tokio = { version = "1", features = ["rt-multi-thread"] , optional = true}
 
-gray_matter = { version = "0.2.6", optional = true }
-pulldown-cmark = { version = "0.10.2", optional = true }
-
 [features]
 development= []
 generator = [
-    "web-server/generator",
-    "dep:web-server",
     "dep:bevy-tokio-tasks",
     "dep:bevy_framepace",
     "dep:tokio",
     "bevy-leptos/generator"
     ]
-ron = ["dep:serde", "dep:ron"]
-markdown = ["dep:serde", "dep:gray_matter", "dep:pulldown-cmark"]
+ron = ["bevy-leptos/ron"]
+markdown = ["bevy-leptos/markdown"]
