@@ -1,4 +1,6 @@
 mod config;
+
+#[cfg(feature = "generator")]
 pub mod prelude;
 
 use std::{any::type_name, path::Path, sync::{Arc, Mutex}};
@@ -10,6 +12,7 @@ use bevy::ecs::world::EntityWorldMut;
 use bevy_tokio_tasks::TaskContext;
 use web_server::expect_context;
 
+#[cfg(feature = "generator")]
 pub use crate::prelude::*;
 
 trait DataLayer {
