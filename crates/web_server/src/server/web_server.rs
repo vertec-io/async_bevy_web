@@ -1,7 +1,9 @@
 
 use std::net::SocketAddr;
 use axum::extract::ws::Message;
-use bevy::prelude::*;
+use bevy_app::{App, Plugin};
+use bevy_ecs::component::Component;
+use bevy_ecs::prelude::Resource;
 use tokio::sync::broadcast;
 
 #[derive(Component)]

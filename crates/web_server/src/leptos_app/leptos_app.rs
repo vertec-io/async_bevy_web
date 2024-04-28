@@ -1,10 +1,9 @@
-use bevy::prelude::*;
+// use bevy::prelude::*;
+use bevy_app::{App, Plugin, PostStartup};
+use bevy_ecs::prelude::{Resource, Res, ResMut};
 use bevy_tokio_tasks::TokioTasksRuntime;
 use leptos::*;
-use leptos_axum::{generate_route_list_with_exclusions, generate_route_list_with_exclusions_and_ssg_and_context, LeptosRoutes};
-use leptos_router::build_static_routes_with_additional_context;
-use tokio::task::LocalSet;
-// use tokio::task::LocalSet;
+use leptos_axum::{generate_route_list_with_exclusions, LeptosRoutes};
 
 use crate::server::web_server::WebServer;
 use crate::server::websocket::websocket_handler;
@@ -106,7 +105,7 @@ where
     runtime.spawn_background_task(|ctx| async move {
         let server_clone = (move || (server_clone))();    
         let socket_address = server_clone.address.clone();
-        let context = Arc::new(Mutex::new(ctx));
+        // let context = Arc::new(Mutex::new(ctx));
         // let context_clone = context.clone();
         let leptos_app_clone = (move || leptos_app_clone)();
         let app_fn = leptos_app_clone.app_fn;

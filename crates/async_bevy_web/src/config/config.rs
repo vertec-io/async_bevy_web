@@ -1,10 +1,15 @@
+use bevy_app::{App, Plugin, PluginGroup, PluginGroupBuilder, PostStartup};
+use bevy_app::NoopPluginGroup as MinimalPlugins;
+use bevy_ecs::prelude::{Resource, Res, ResMut};
 
-use bevy::{app::PluginGroupBuilder, prelude::*};
+#[cfg(feature = "generator")]
 use bevy_tokio_tasks::TokioTasksPlugin;
 
+#[cfg(feature = "generator")]
 use web_server::WebServerPlugin;
-use bevy_framepace::FramepacePlugin;
 
+#[cfg(feature = "generator")]
+use bevy_framepace::FramepacePlugin;
 
 #[derive(Resource, Debug)]
 pub struct FrameRate {
@@ -43,6 +48,7 @@ impl ABWConfigPlugin{
     }
 }
 
+#[cfg(feature = "generator")]
 impl Plugin for ABWConfigPlugin {
     fn build(&self, app: &mut App) {
         app.add_plugins(FramepacePlugin)
@@ -53,13 +59,15 @@ impl Plugin for ABWConfigPlugin {
     }
 }
 
+#[cfg(feature = "generator")]
 fn setup(mut settings: ResMut<bevy_framepace::FramepaceSettings>, frame_rate: Res<FrameRate>) {
     use bevy_framepace::Limiter;
     settings.limiter = Limiter::from_framerate(frame_rate.value);
 }
 
+#[cfg(feature = "generator")]
 pub struct AsyncBevyWebPlugins;
-
+#[cfg(feature = "generator")]
 impl PluginGroup for AsyncBevyWebPlugins {
     fn build(self) -> PluginGroupBuilder {
         PluginGroupBuilder::start::<Self>()
