@@ -1,19 +1,20 @@
 #[cfg(feature="generator")]
 use std::any::type_name;
-#[cfg(feature="generator")]
-use std::sync::{Arc, Mutex};
-#[cfg(feature="generator")]
-use bevy_ecs::system::{IntoSystem, Resource};
-#[cfg(feature="generator")]
-use bevy_tokio_tasks::TaskContext;
-#[cfg(feature="generator")]
-use leptos::expect_context;
 
 #[cfg(feature="generator")]
-pub async fn use_resource<R: Resource + Clone> () -> Option<R>{
-    let ctx = expect_context::<Arc<Mutex<TaskContext>>>();
-    let mut ctx = ctx.lock().unwrap();
-    ctx.run_on_main_thread(move |ctx| {
+use bevy_ecs::system::{IntoSystem, Resource};
+
+#[cfg(feature="generator")]
+use leptos::expect_context;
+#[cfg(feature="generator")]
+use crate::generator::dyn_generator::AppState;
+
+#[cfg(feature="generator")]
+// #[server]
+pub async fn use_resource<R: Resource + Clone> () ->Option<R>{
+
+    let mut state = expect_context::<AppState>();
+    state.world_context.run_on_main_thread(move |ctx| {
         ctx.world.get_resource::<R>().cloned()
     }).await
 }
@@ -33,10 +34,8 @@ where
     I: Send + 'static
 {
     use crate::DataLayer;
-
-    let ctx = expect_context::<Arc<Mutex<TaskContext>>>();
-    let mut ctx = ctx.lock().unwrap();
-    ctx.run_on_main_thread(move |ctx| {
+    let mut state = expect_context::<AppState>();
+    state.world_context.run_on_main_thread(move |ctx| {
         ctx.world.run_user_system(system, input)
     }).await
 }

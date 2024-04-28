@@ -17,7 +17,7 @@ impl Plugin for WebServerPlugin{
     }
 }
 
-#[derive(Resource, Clone)]
+#[derive(Resource, Clone, Debug)]
 pub struct WebServer {
     pub address: SocketAddr,
     pub port: u32,
