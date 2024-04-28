@@ -172,6 +172,7 @@ impl TokioTasksRuntime {
 
 /// The context arguments which are available to main thread callbacks requested using
 /// [`run_on_main_thread`](TaskContext::run_on_main_thread).
+#[derive(Debug)]
 pub struct MainThreadContext<'a> {
     /// A mutable reference to the main Bevy [World].
     pub world: &'a mut World,
