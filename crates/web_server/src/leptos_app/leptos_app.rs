@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use bevy_tokio_tasks::TokioTasksRuntime;
 use leptos::*;
-use leptos_axum::{generate_route_list_with_exclusions_and_ssg_and_context, LeptosRoutes};
+use leptos_axum::{generate_route_list_with_exclusions, generate_route_list_with_exclusions_and_ssg_and_context, LeptosRoutes};
 use leptos_router::build_static_routes_with_additional_context;
 use tokio::task::LocalSet;
 // use tokio::task::LocalSet;
@@ -107,7 +107,7 @@ where
         let server_clone = (move || (server_clone))();    
         let socket_address = server_clone.address.clone();
         let context = Arc::new(Mutex::new(ctx));
-        let context_clone = context.clone();
+        // let context_clone = context.clone();
         let leptos_app_clone = (move || leptos_app_clone)();
         let app_fn = leptos_app_clone.app_fn;
         let app_fn_clone = app_fn.clone();
@@ -116,14 +116,17 @@ where
         let conf = get_configuration(None).await.unwrap();
         let leptos_options = conf.leptos_options;
 
-        let (routes, static_data_map) = generate_route_list_with_exclusions_and_ssg_and_context(
-            move || {app_fn_clone}, 
-            Some(vec!["/ws".into()]), 
-            move || provide_context(context.clone())
-        );
+        // let (routes, static_data_map) = generate_route_list_with_exclusions_and_ssg_and_context(
+        //     move || {app_fn_clone}, 
+        //     Some(vec!["/ws".into()]), 
+        //     move || provide_context(context.clone())
+        // );
+
+        let routes = generate_route_list_with_exclusions(move || {app_fn_clone}, Some(vec!["/ws".into()]));
+        // generate_route_list_with_exclusions_and_ssg_and_context(app_fn, excluded_routes, additional_context)
         
         let leptos_options_clone = leptos_options.clone();
-        let leptos_options_clone2 = leptos_options.clone();
+        // let leptos_options_clone2 = leptos_options.clone();
 
         let routes_clone = routes.clone();
         let routes_clone2 = routes.clone();
@@ -189,9 +192,9 @@ where
         let axum_app: Router = Router::new()
                                 // .route("/", get(root))
                                 .route("/ws",get(websocket_handler))
-                                .leptos_routes(&leptos_options_clone2, routes_clone2, move || app_fn_clone2)
+                                .leptos_routes(&leptos_options_clone, routes_clone2, move || app_fn_clone2)
                                 .fallback(file_and_error_handler)
-                                .with_state(leptos_options_clone2)
+                                .with_state(leptos_options_clone)
                                 .layer( //Logging setup
                                     TraceLayer::new_for_http()
                                         .make_span_with(DefaultMakeSpan::default().include_headers(true)),

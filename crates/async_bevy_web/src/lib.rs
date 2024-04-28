@@ -3,12 +3,12 @@ pub mod prelude;
 
 use std::{any::type_name, path::Path, sync::{Arc, Mutex}};
 
-use bevy::{app::App, ecs::world::World};
+use bevy::ecs::world::World;
 use bevy::ecs::{bundle::Bundle, component::Component};
 use bevy::ecs::system::{BoxedSystem, EntityCommands, IntoSystem, Resource};
 use bevy::ecs::world::EntityWorldMut;
-use bevy_tokio_tasks::{MainThreadContext, TaskContext};
-use web_server::{create_action, expect_context};
+use bevy_tokio_tasks::TaskContext;
+use web_server::expect_context;
 
 pub use crate::prelude::*;
 
@@ -61,9 +61,6 @@ impl DataLayer for World {
 
 }
 pub async fn use_resource<R: Resource + Clone> () -> Option<R>{
-    // let world = expect_context::<Arc<Mutex<World>>>();
-    // let world_lock = world.lock().unwrap();
-    // world_lock.get_resource::<R>().cloned()
     let ctx = expect_context::<Arc<Mutex<TaskContext>>>();
     let mut ctx = ctx.lock().unwrap();
     ctx.run_on_main_thread(move |ctx| {
@@ -87,7 +84,6 @@ where
     ctx.run_on_main_thread(move |ctx| {
         ctx.world.run_user_system(system, input)
     }).await
-    // ctx.run_user_system(system, input)
 }
 
 pub async fn run_system<S, R, T>(system: S) -> R
@@ -97,16 +93,6 @@ where
 {
     run_system_with_input(system, ()).await
 }
-
-
-// pub fn run_system<S, R, T>(system:S) -> R
-//     where
-//         S: IntoSystem<(), R, T>,
-//         R: 'static,
-// (
-    
-// )
-
 
 #[derive(Component, Clone)]
 pub struct FileName(pub String);
