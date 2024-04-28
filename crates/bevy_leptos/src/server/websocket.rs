@@ -6,7 +6,7 @@ use axum::{
 
 use axum_extra::TypedHeader;
 use leptos::expect_context;
-
+use crate::generator::dyn_generator::AppState;
 
 
 //Allows to extract the IP of connecting user
@@ -16,16 +16,17 @@ use axum::extract::connect_info::ConnectInfo;
 use futures::{sink::SinkExt, stream::StreamExt};
 use tokio::sync::mpsc;
 
-use crate::web_server::WebServer;
+use crate::server::web_server::WebServer;
 
 pub async fn websocket_handler(
     
     ws: WebSocketUpgrade,
     user_agent: Option<TypedHeader<headers::UserAgent>>,
     ConnectInfo(addr): ConnectInfo<SocketAddr>,
-    // state: Extension<Arc<WebServer>>        
+    
 ) -> impl IntoResponse {
-    let state = expect_context::<Arc<WebServer>>();
+    let state = expect_context::<AppState>();
+    let state = state.server;
     println!("Handling a new websocket connection!");
     let user_agent = if let Some(TypedHeader(user_agent)) = user_agent {
         user_agent.to_string()

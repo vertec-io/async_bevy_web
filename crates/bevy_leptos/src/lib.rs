@@ -13,6 +13,9 @@ use generator::dyn_generator::start_leptos_app;
 #[cfg(not(feature="generator"))]
 use generator::static_generator::start_leptos_app;
 
+#[cfg(feature="generator")]
+pub mod server;
+
 pub trait LeptosView: IntoView + Send + Sync + 'static + Clone +Copy {}
 impl<T> LeptosView for T where T: IntoView + Send + Sync + 'static + Clone +Copy {}
 

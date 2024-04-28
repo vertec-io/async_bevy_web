@@ -514,7 +514,6 @@ dependencies = [
  "tower-http",
  "tracing",
  "tracing-subscriber",
- "web-server",
 ]
 
 [[package]]

@@ -25,7 +25,8 @@ use tower_http::services::ServeDir;
 use axum::response::Response as AxumResponse;
 use axum_macros::FromRef;
 use crate::{LeptosApp, LeptosView};
-use web_server::{websocket_handler, WebServer};
+use crate::server::WebServer;
+use crate::server::websocket_handler;
 
 #[derive(FromRef, Debug, Clone)]
 pub struct AppState{
