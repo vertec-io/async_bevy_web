@@ -205,8 +205,10 @@ dependencies = [
  "bevy-leptos",
  "bevy-tokio-tasks",
  "bevy_app",
+ "bevy_core",
  "bevy_ecs",
  "bevy_framepace",
+ "bevy_time",
  "tokio",
 ]
 
