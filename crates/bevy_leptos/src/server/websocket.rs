@@ -23,10 +23,10 @@ pub async fn websocket_handler(
     ws: WebSocketUpgrade,
     user_agent: Option<TypedHeader<headers::UserAgent>>,
     ConnectInfo(addr): ConnectInfo<SocketAddr>,
-    
+    State(state): State<AppState> 
 ) -> impl IntoResponse {
-    let state = expect_context::<AppState>();
-    let state = state.server;
+    // let state = expect_context::<AppState>();
+    // let state = state.server;
     println!("Handling a new websocket connection!");
     let user_agent = if let Some(TypedHeader(user_agent)) = user_agent {
         user_agent.to_string()
@@ -37,7 +37,7 @@ pub async fn websocket_handler(
 
     // Finalize the upgrade process by returning upgrade callback.
     // We can customize the callback by sending additional info such as address
-    ws.on_upgrade(move |socket| handle_socket(socket, addr, state))
+    ws.on_upgrade(move |socket| handle_socket(socket, addr, state.server))
 }
 
 /// Actual websocket statemachine (one will be spawned per connection)
