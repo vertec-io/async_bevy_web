@@ -1,5 +1,5 @@
 use bevy_app::{App, Plugin, PluginGroup, PluginGroupBuilder, PostStartup};
-use bevy_app::NoopPluginGroup as MinimalPlugins;
+// use bevy_app::NoopPluginGroup as MinimalPlugins;
 use bevy_ecs::prelude::{Resource, Res, ResMut};
 
 #[cfg(feature = "generator")]
@@ -70,4 +70,23 @@ impl PluginGroup for AsyncBevyWebPlugins {
         PluginGroupBuilder::start::<Self>()
             .add(TokioTasksPlugin::default())
             }
+}
+
+pub struct MinimalPlugins;
+
+impl PluginGroup for MinimalPlugins {
+    fn build(self) -> PluginGroupBuilder {
+        let mut group = PluginGroupBuilder::start::<Self>();
+        group = group
+            .add(bevy_core::TaskPoolPlugin::default())
+            .add(bevy_core::TypeRegistrationPlugin)
+            .add(bevy_core::FrameCountPlugin)
+            .add(bevy_time::TimePlugin)
+            .add(bevy_app::ScheduleRunnerPlugin::default());
+        #[cfg(feature = "bevy_dev_tools")]
+        {
+            group = group.add(bevy_dev_tools::DevToolsPlugin);
+        }
+        group
+    }
 }
