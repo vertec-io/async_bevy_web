@@ -33,7 +33,7 @@ pub async fn websocket_handler(
     }else{
         String::from("Unknown browser")
     };
-    println!("`{user_agent} at {addr} connected to {}.",state.server_name);
+    println!("`{user_agent} at {addr} connected to {}.",state.server.server_name);
 
     // Finalize the upgrade process by returning upgrade callback.
     // We can customize the callback by sending additional info such as address
