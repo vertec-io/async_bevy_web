@@ -15,8 +15,11 @@ use generator::static_generator::start_leptos_app;
 
 #[cfg(feature="generator")]
 pub mod server;
+// #[cfg(feature="generator")]
+// use server::WebServerPlugin;
+
 #[cfg(feature="generator")]
-use server::WebServerPlugin;
+pub use server::*;
 
 pub trait LeptosView: IntoView + Send + Sync + 'static + Clone +Copy {}
 impl<T> LeptosView for T where T: IntoView + Send + Sync + 'static + Clone +Copy {}
