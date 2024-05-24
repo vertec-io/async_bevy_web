@@ -7,7 +7,7 @@ use bevy_ecs::system::{IntoSystem, Resource};
 #[cfg(feature="generator")]
 use leptos::expect_context;
 #[cfg(feature="generator")]
-use crate::generator::dyn_generator::AppState;
+pub use crate::generator::dyn_generator::AppState;
 
 #[cfg(feature="generator")]
 pub async fn use_resource<R: Resource + Clone> () ->Option<R>{
