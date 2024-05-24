@@ -1,6 +1,6 @@
 
 use std::net::SocketAddr;
-use axum::extract::ws::Message;
+pub use axum::extract::ws::Message;
 use bevy_app::{App, Plugin};
 use bevy_ecs::component::Component;
 use bevy_ecs::prelude::Resource;
