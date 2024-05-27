@@ -2,9 +2,13 @@
 members = [
     "crates/bevy_tokio_tasks",
     "crates/async_bevy_web",
-    "crates/bevy_framepace"
-]
+    "crates/bevy_framepace",
+    "crates/bevy-leptos", 
+    "crates/abw_macros"
+    ]
 exclude = [
+    "examples",
+    "crates/bevy_leptos",
     "crates/example_app",
 ]
 

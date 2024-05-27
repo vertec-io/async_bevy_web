@@ -14,19 +14,11 @@ bevy_ecs.workspace = true
 bevy_core = {version="0.13"}
 bevy_time = {version="0.13"}
 
-bevy-tokio-tasks = {path = "../bevy_tokio_tasks", optional = true}
-bevy_framepace = {path = "../bevy_framepace", optional = true}
-bevy-leptos = {path = "../bevy_leptos"}
+bevy-tokio-tasks = {path = "../bevy_tokio_tasks"}
+bevy_framepace = {path = "../bevy_framepace"}
+bevy-leptos = {path = "../bevy-leptos"}
 
-tokio = { version = "1", features = ["rt-multi-thread"] , optional = true}
+tokio = { version = "1", features = ["rt-multi-thread"]}
 
 [features]
-development= []
-generator = [
-    "dep:bevy-tokio-tasks",
-    "dep:bevy_framepace",
-    "dep:tokio",
-    "bevy-leptos/generator"
-    ]
-ron = ["bevy-leptos/ron"]
-markdown = ["bevy-leptos/markdown"]
+default=[]
