@@ -5,7 +5,7 @@ use axum::{
 };
 
 use axum_extra::TypedHeader;
-use leptos::expect_context;
+use bevy_tokio_tasks::TaskContext;
 use crate::generator::dyn_generator::AppState;
 
 
@@ -37,11 +37,11 @@ pub async fn websocket_handler(
 
     // Finalize the upgrade process by returning upgrade callback.
     // We can customize the callback by sending additional info such as address
-    ws.on_upgrade(move |socket| handle_socket(socket, addr, state.server))
+    ws.on_upgrade(move |socket| handle_socket(socket, addr, state.server, state.world_context))
 }
 
 /// Actual websocket statemachine (one will be spawned per connection)
-async fn handle_socket(mut socket: WebSocket, who: SocketAddr, state: Arc<WebServer>) {
+async fn handle_socket(mut socket: WebSocket, who: SocketAddr, state: Arc<WebServer>, world_context: TaskContext) {
 
     // Since each client gets individual websocket statemachine, we can pause handling
     // when necessary to wait from some external event. Here is where we can perform housekeeping 

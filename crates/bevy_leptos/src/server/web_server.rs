@@ -28,7 +28,7 @@ pub struct WebServer {
 
 impl Default for WebServer {
     fn default() -> WebServer {
-        let (tx, _) = broadcast::channel(32);
+        let (tx, rx) = broadcast::channel(32);
         WebServer {
             address: SocketAddr::from(([127,0,0,1], 3000)),
             port: 3000,
