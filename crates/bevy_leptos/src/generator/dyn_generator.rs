@@ -47,7 +47,7 @@ where
     let leptos_app_clone = Arc::new(leptos_app.clone());
     
     runtime.spawn_background_task(|ctx| async move {
-        simple_logger::init_with_level(log::Level::Debug).expect("couldn't initialize logging");
+        // simple_logger::init_with_level(log::Level::Debug).expect("couldn't initialize logging");
 
         let leptos_app_clone = (move || leptos_app_clone)();
         let app_fn = leptos_app_clone.app_fn;
