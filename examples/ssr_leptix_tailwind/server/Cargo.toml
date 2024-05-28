@@ -1,0 +1,27 @@
+[package]
+name = "server"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+app = { path = "../app", default-features = false, features = ["ssr"] }
+
+leptos = { workspace = true, features = [ "ssr" ]}
+leptos_axum.workspace = true
+
+bevy_ecs = { version = "0.13" }
+bevy = {version = "0.13", default-features = false}
+async-bevy-web = {path="C:/Users/ArturoPino/dev/async_bevy_web/crates/async_bevy_web"}
+bevy_eventwork = "0.8.0"
+bevy_eventwork_mod_websockets = "0.1.0"
+
+axum.workspace = true
+simple_logger.workspace = true
+tokio.workspace = true
+tower.workspace = true
+tower-http.workspace = true
+log.workspace = true
+serde = { version = "1.0", features = ["derive"] }
+
