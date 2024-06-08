@@ -1,6 +1,6 @@
 [workspace]
 resolver = "2"
-members = ["app", "frontend", "server"]
+members = ["app", "frontend", "server", "shared"]
 
 # need to be applied only to wasm build
 [profile.release]
@@ -13,8 +13,7 @@ leptos = { version = "0.6", features = ["nightly"] }
 leptos_meta = { version = "0.6", features = ["nightly"]}
 leptos_router = { version = "0.6", features = ["nightly"]}
 leptos_axum = { version = "0.6" }
-leptix_primitives = { git = "https://github.com/leptix/leptix", branch = "master"} 
-leptos-use = {version="0.10.10", features=["serde"]}
+
 
 axum = "0.7"
 cfg-if = "1"

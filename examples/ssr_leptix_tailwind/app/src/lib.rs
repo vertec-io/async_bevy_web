@@ -6,7 +6,7 @@ use leptos_router::*;
 
 pub mod error_template;
 pub mod components;
-
+pub mod utils;
 use components::toggle_theme::ToggleTheme;
 
 #[component]
@@ -41,6 +41,7 @@ pub fn MyApp() -> impl IntoView {
 fn HomePage() -> impl IntoView {
     // Creates a reactive value to update the button
     let (count, set_count) = create_signal(0);
+    let doubled = move || count()*2;
     let on_click = move |_| set_count.update(|count| *count += 1);
 
     view! {
@@ -48,6 +49,8 @@ fn HomePage() -> impl IntoView {
         <h1 class="text-4xl text-blue-500 items-center">"Welcome to Leptos + Bevy!"</h1>
         <button class="bg-primary text-primary-foreground rounded p-2 font-extrabold" on:click=on_click>"Click Me: " {count}</button>
         <ToggleTheme/>
+        <div> This is a Div {doubled}</div>
         </div>
     }
 }
+

@@ -1,7 +1,6 @@
 use bevy::prelude::*;
-use bevy_eventwork::NetworkMessage;
-use serde::{Deserialize, Serialize};
 use bevy_eventwork_mod_websockets::WebSocketProvider;
+use shared::messages::{NewChatMessage, UserChatMessage};
 
 /////////////////////////////////////////////////////////////////////
 // In this example the client sends `UserChatMessage`s to the server,
@@ -16,24 +15,24 @@ use bevy_eventwork_mod_websockets::WebSocketProvider;
 // send and recieve
 /////////////////////////////////////////////////////////////////////
 
-#[derive(Serialize, Deserialize, Clone, Debug)]
-pub struct UserChatMessage {
-    pub message: String,
-}
+// #[derive(Serialize, Deserialize, Clone, Debug)]
+// pub struct UserChatMessage {
+//     pub message: String,
+// }
 
-impl NetworkMessage for UserChatMessage {
-    const NAME: &'static str = "example:UserChatMessage";
-}
+// impl NetworkMessage for UserChatMessage {
+//     const NAME: &'static str = "example:UserChatMessage";
+// }
 
-#[derive(Serialize, Deserialize, Clone, Debug)]
-pub struct NewChatMessage {
-    pub name: String,
-    pub message: String,
-}
+// #[derive(Serialize, Deserialize, Clone, Debug)]
+// pub struct NewChatMessage {
+//     pub name: String,
+//     pub message: String,
+// }
 
-impl NetworkMessage for NewChatMessage {
-    const NAME: &'static str = "example:NewChatMessage";
-}
+// impl NetworkMessage for NewChatMessage {
+//     const NAME: &'static str = "example:NewChatMessage";
+// }
 
 #[allow(unused)]
 pub fn client_register_network_messages(app: &mut App) {

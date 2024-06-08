@@ -4,9 +4,11 @@ use bevy_eventwork::{ConnectionId, EventworkRuntime, Network, NetworkData, Netwo
 use bevy_eventwork_mod_websockets::{WebSocketProvider, NetworkSettings};
 use std::net::{IpAddr, Ipv4Addr, SocketAddr};
 
+use shared::messages::*;
+
 pub mod fileserv;
 pub mod appserv;
-pub mod shared;
+pub mod messages;
 
 use appserv::start_leptos_app;
 
@@ -24,7 +26,7 @@ fn main () {
        .insert_resource(NetworkSettings::default());
     
     // Register the messages where they are defined
-    shared::server_register_network_messages(&mut app);
+    messages::server_register_network_messages(&mut app);
 
     // Networking systems
     app.add_systems(Startup, setup_networking)
@@ -80,24 +82,24 @@ fn handle_connection_events(
             commands.spawn((User(*conn_id),));
 
         // Broadcasting sends the message to all connected users! (Including the just connected one in this case)
-        net.broadcast(shared::NewChatMessage {
+        net.broadcast(NewChatMessage {
             name: String::from("SERVER"),
             message: format!("New user connected: {}", conn_id),
         });
-        info!("New player connected: {}",conn_id);
+        info!("New user connected: {}",conn_id);
         }
     }
 }
 
 fn handle_messages(
-    mut new_messages: EventReader<NetworkData<shared::UserChatMessage>>,
+    mut new_messages: EventReader<NetworkData<UserChatMessage>>,
     net: Res<Network<WebSocketProvider>>,
 ){
     for message in new_messages.read(){
         let user = message.source();
         info!("Received message from user: {}", message.message);
 
-        net.broadcast(shared::NewChatMessage{
+        net.broadcast(NewChatMessage{
             name: format!("{}",user),
             message: message.message.clone(),
         });
