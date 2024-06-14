@@ -37,12 +37,23 @@ pub fn WsMessages() -> impl IntoView {
                                                     message: "Hello, world!".to_string()
                                                     };
 
+            let serialized_msg = serialize_msg(&new_chat_message).unwrap();
+
             let packet = NetworkPacket {
                 kind: UserChatMessage::NAME.to_string(),
-                data: serialize_msg(&new_chat_message).unwrap() 
+                data: serialized_msg.clone()
             };
 
-            send_bytes(bincode::serialize(&packet).unwrap());
+            let serialized_packet = bincode::serialize(&packet).unwrap();
+            // Create a buffer to hold the length of the serialized packet and the serialized packet itself
+            let mut buffer = Vec::new();
+            let len = serialized_packet.len() as u64;
+            buffer.extend_from_slice(&len.to_le_bytes()); // Add length prefix
+            buffer.extend_from_slice(&serialized_packet); // Add serialized packet
+
+            send_bytes(buffer); // Send the combined buffer
+
+            // send_bytes(serialized_packet.to_le);
         };
 
         let status = move || ready_state.get().to_string();
