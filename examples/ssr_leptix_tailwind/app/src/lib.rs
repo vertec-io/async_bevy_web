@@ -8,6 +8,7 @@ pub mod error_template;
 pub mod components;
 pub mod utils;
 use components::toggle_theme::ToggleTheme;
+use components::chat::WsMessages;
 
 #[component]
 pub fn MyApp() -> impl IntoView {
@@ -50,6 +51,7 @@ fn HomePage() -> impl IntoView {
         <button class="bg-primary text-primary-foreground rounded p-2 font-extrabold" on:click=on_click>"Click Me: " {count}</button>
         <ToggleTheme/>
         <div> This is a Div {doubled}</div>
+        <WsMessages />
         </div>
     }
 }

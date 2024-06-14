@@ -1,7 +1,7 @@
 use async_bevy_web::prelude::{ABWConfigPlugin, LeptosAppPlugin};
 use bevy::{prelude::*, tasks::{TaskPool, TaskPoolBuilder}};
-use bevy_eventwork::{ConnectionId, EventworkRuntime, Network, NetworkData, NetworkEvent};
-use bevy_eventwork_mod_websockets::{WebSocketProvider, NetworkSettings};
+use eventwork::{ConnectionId, EventworkRuntime, Network, NetworkData, NetworkEvent};
+use eventwork_websockets::{WebSocketProvider, NetworkSettings};
 use std::net::{IpAddr, Ipv4Addr, SocketAddr};
 
 use shared::messages::*;
@@ -21,7 +21,7 @@ fn main () {
        .add_plugins(LeptosAppPlugin::new(start_leptos_app()));
 
     // Networking plugins    
-    app.add_plugins(bevy_eventwork::EventworkPlugin::<WebSocketProvider,bevy::tasks::TaskPool,>::default())
+    app.add_plugins(eventwork::EventworkPlugin::<WebSocketProvider,bevy::tasks::TaskPool,>::default())
        .insert_resource(EventworkRuntime(TaskPoolBuilder::new().num_threads(2).build(),))
        .insert_resource(NetworkSettings::default());
     

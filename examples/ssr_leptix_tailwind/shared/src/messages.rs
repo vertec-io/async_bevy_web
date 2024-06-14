@@ -1,4 +1,4 @@
-use bevy_eventwork::NetworkMessage;
+pub use eventwork_common::*;
 use serde::{Serialize, Deserialize};
 
 /////////////////////////////////////////////////////////////////////

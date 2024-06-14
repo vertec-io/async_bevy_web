@@ -1,5 +1,5 @@
 use bevy::prelude::*;
-use bevy_eventwork_mod_websockets::WebSocketProvider;
+use eventwork_websockets::WebSocketProvider;
 use shared::messages::{NewChatMessage, UserChatMessage};
 
 /////////////////////////////////////////////////////////////////////
@@ -36,7 +36,7 @@ use shared::messages::{NewChatMessage, UserChatMessage};
 
 #[allow(unused)]
 pub fn client_register_network_messages(app: &mut App) {
-    use bevy_eventwork::AppNetworkMessage;
+    use eventwork::AppNetworkMessage;
 
     // The client registers messages that arrives from the server, so that
     // it is prepared to handle them. Otherwise, an error occurs.
@@ -45,7 +45,7 @@ pub fn client_register_network_messages(app: &mut App) {
 
 #[allow(unused)]
 pub fn server_register_network_messages(app: &mut App) {
-    use bevy_eventwork::AppNetworkMessage;
+    use eventwork::AppNetworkMessage;
 
     // The server registers messages that arrives from a client, so that
     // it is prepared to handle them. Otherwise, an error occurs.

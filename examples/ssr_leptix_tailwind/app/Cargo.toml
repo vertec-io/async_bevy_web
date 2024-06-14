@@ -14,7 +14,7 @@ leptos_axum = { workspace = true, optional = true }
 leptix_primitives = { git = "https://github.com/leptix/leptix", branch = "master"} 
 leptos-use = {version="0.10.10", features=["serde"]}
 
-bevy_eventwork = {git="https://github.com/vertec-io/bevy_eventwork", branch="wasm_core_features"}
+# bevy_eventwork = {git="https://github.com/vertec-io/bevy_eventwork", branch="wasm_core_features"}
 shared = {path="../shared"}
 
 http.workspace = true
