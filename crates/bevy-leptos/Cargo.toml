@@ -8,10 +8,3 @@ bevy_ecs.workspace = true
 bevy_app.workspace = true
 bevy-tokio-tasks = {path = "../bevy_tokio_tasks"}
 abw_macros = {path = "../abw_macros"}
-
-leptos = { version = "0.6" }
-leptos_meta = { version = "0.6" }
-
-proc-macro2 = "1.0"
-quote = "1.0"
-syn = { version = "2.0", features = ["full"] }

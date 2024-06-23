@@ -18,7 +18,5 @@ bevy-tokio-tasks = {path = "../bevy_tokio_tasks"}
 bevy_framepace = {path = "../bevy_framepace"}
 bevy-leptos = {path = "../bevy-leptos"}
 
-tokio = { version = "1", features = ["rt-multi-thread"]}
-
 [features]
 default=[]
