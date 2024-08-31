@@ -29,5 +29,5 @@ incremental = false
 debug = false
 
 [workspace.dependencies]
-bevy_ecs = {version = "0.13"}
-bevy_app = {version = "0.13"}
+bevy_ecs = {version = "0.14"}
+bevy_app = {version = "0.14"}
