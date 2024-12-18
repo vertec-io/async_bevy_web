@@ -15,11 +15,11 @@ crate-type = ["lib"]
 [dependencies]
 bevy_app.workspace = true
 bevy_ecs.workspace = true
-bevy_diagnostic = "0.14"
-bevy_log = "0.14"
-bevy_reflect = "0.14"
-bevy_time = "0.14"
-bevy_utils = "0.14"
+bevy_diagnostic = "0.15"
+bevy_log = "0.15"
+bevy_reflect = "0.15"
+bevy_time = "0.15"
+bevy_utils = "0.15"
 # Non-bevy
 spin_sleep = "1.0"
 

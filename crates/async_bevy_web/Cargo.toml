@@ -11,8 +11,8 @@ crate-type = ["lib"]
 [dependencies]
 bevy_app.workspace = true
 bevy_ecs.workspace = true
-bevy_core = {version="0.14"}
-bevy_time = {version="0.14"}
+bevy_core = {version="0.15"}
+bevy_time = {version="0.15"}
 
 bevy-tokio-tasks = {path = "../bevy_tokio_tasks"}
 bevy_framepace = {path = "../bevy_framepace"}
