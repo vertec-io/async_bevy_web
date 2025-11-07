@@ -11,8 +11,7 @@ app = { path = "../app", default-features = false, features = ["ssr"] }
 leptos = { workspace = true, features = [ "ssr" ]}
 leptos_axum.workspace = true
 
-bevy_ecs = { version = "0.13" }
-bevy = {version = "0.13", default-features = false}
+bevy = {version = "0.16.0", default-features = false}
 async-bevy-web = {path="../../../crates/async_bevy_web"}
 eventwork = {git="https://github.com/vertec-io/bevy_eventwork", branch="network_workspace", package = "eventwork"}
 eventwork_websockets = {git="https://github.com/vertec-io/bevy_eventwork", branch="network_workspace", package = "eventwork_websockets"}

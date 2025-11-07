@@ -4,7 +4,6 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-bevy_ecs.workspace = true
-bevy_app.workspace = true
+bevy = { workspace = true }
 bevy-tokio-tasks = {path = "../bevy_tokio_tasks"}
 abw_macros = {path = "../abw_macros"}

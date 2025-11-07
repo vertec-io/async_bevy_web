@@ -1,6 +1,6 @@
 [package]
 name = "async-bevy-web"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
 
 [lib]
@@ -9,13 +9,9 @@ crate-type = ["lib"]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-bevy_app.workspace = true
-bevy_ecs.workspace = true
-bevy_core = {version="0.15"}
-bevy_time = {version="0.15"}
+bevy = { workspace = true }
 
 bevy-tokio-tasks = {path = "../bevy_tokio_tasks"}
-bevy_framepace = {path = "../bevy_framepace"}
 bevy-leptos = {path = "../bevy-leptos"}
 
 [features]

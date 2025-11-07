@@ -2,9 +2,7 @@
 use std::sync::Arc;
 use std::pin::Pin;
 use std::future::Future;
-use bevy_app::{App, Plugin, PostStartup};
-use bevy_ecs::prelude::{Res, ResMut};
-use bevy_ecs::system::Resource;
+use bevy::prelude::*;
 use bevy_tokio_tasks::TokioTasksRuntime;
 
 pub use abw_macros::leptos_app;
