@@ -8,6 +8,12 @@ This application is in very early development and will change significantly over
 
 Async Bevy Web provides several plugins for Bevy for creating real-time, interactive web applications. This setup allows for the development of games or interactive applications that require handling complex data on the server and providing real-time communication/updates between the server and the client, leveraging the power and performance of Rust.
 
+## Version Compatibility
+
+| async-bevy-web version | bevy version | bevy-tokio-tasks version | bevy-leptos version |
+|---|---|---|---|
+| 0.3.0 | 0.16.0 | 0.16.0 | 0.1.0 |
+
 ## Getting Started
 
 To get the application running on your local machine, follow these steps:
