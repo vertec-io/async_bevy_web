@@ -6,23 +6,23 @@ use axum::{
     http::{Request, Response, StatusCode, Uri},
     response::IntoResponse,
 };
-use leptos::*;
+use leptos::prelude::*;
 use tower::ServiceExt;
 use tower_http::services::ServeDir;
 
 pub async fn file_and_error_handler(
     uri: Uri,
-    State(options): State<LeptosOptions>,
+    State(_options): State<LeptosOptions>,
     req: Request<Body>,
 ) -> AxumResponse {
-    let root = options.site_root.clone();
+    let root = _options.site_root.clone();
     let res = get_static_file(uri.clone(), &root).await.unwrap();
 
     if res.status() == StatusCode::OK {
         res.into_response()
     } else {
         let handler =
-            leptos_axum::render_app_to_stream(options.to_owned(), move || view! { <MyApp/> });
+            leptos_axum::render_app_to_stream(move || view! { <MyApp/> });
         handler(req).await.into_response()
     }
 }
