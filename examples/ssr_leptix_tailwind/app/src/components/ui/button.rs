@@ -1,4 +1,5 @@
-use leptos::{ev::MouseEvent,*};
+use leptos::prelude::*;
+use leptos::ev::MouseEvent;
 // use web_sys::MouseEvent;
 
 #[component]
@@ -7,9 +8,9 @@ pub fn Button<F,D>(
     on_click: F, //impl Fn() + 'static,
     // disabled: bool,
     disabled: D// Option<Box<dyn Fn() -> bool>>,
-) -> impl IntoView 
+) -> impl IntoView
 where F: Fn(MouseEvent) + 'static,
-      D: Fn() -> bool + 'static
+      D: Fn() -> bool + Send + 'static
 {
     view! {
         <button

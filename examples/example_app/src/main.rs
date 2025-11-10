@@ -1,14 +1,10 @@
 use bevy::prelude::*;
-use async_bevy_web::Config;
-use bevy_tokio_tasks::TokioTasksRuntime;
-use web_server::WebServer;
-use axum::extract::ws::Message;
+use async_bevy_web::prelude::*;
 use std::time::{Duration, Instant};
 
 fn main(){
     App::new()
-            .with_default_config()
-            // .with_frame_rate(60.0)
+            .add_plugins(ABWConfigPlugin::default())
             .init_resource::<AppTime>()
             .init_resource::<AverageDeltaTime>()
             .add_systems(Update, print_average_delta_time)
@@ -17,17 +13,13 @@ fn main(){
             .run();
 }
 
-fn demo(runtime: ResMut<TokioTasksRuntime>, server: ResMut<WebServer>) {
-    let tx_sender = server.tx.clone();
+fn demo(runtime: Res<TokioTasksRuntime>) {
     runtime.spawn_background_task(|mut _ctx| async move {
         let mut index = 0;
         loop {
-            
             let msg = format!("Seconds elapsed on a background thread {:?}", index);
             println!("{msg}");
-            
-            let _ = tx_sender.send(Message::Text(msg));
-            
+
             index += 1;
             tokio::time::sleep(Duration::from_secs(1)).await;
         }
@@ -56,19 +48,15 @@ fn countdown(
     app_time.0.tick(time.delta());
 }
 
-fn time_done(app_time: Res<AppTime>, runtime: ResMut<TokioTasksRuntime>, server: ResMut<WebServer>){
-    if app_time.0.finished() {
+fn time_done(app_time: Res<AppTime>, runtime: Res<TokioTasksRuntime>){
+    if app_time.0.is_finished() {
         // Print a message on in the bevy runtime locally
         let msg = "Five more seconds have elapsed on the main thread".to_string();
         println!("{msg}");
 
-        // Send a message to the webserver clients
-        let _ = server.tx.send(Message::Text(msg.clone()));
-        
-        //Alternatively send the server message in a background thread:
-        let tx_sender = server.tx.clone();
+        // Spawn a background task
         runtime.spawn_background_task(|mut _ctx| async move {
-            let _ = tx_sender.send(Message::Text(msg));
+            println!("Background task: {}", msg);
         });
     }
 }

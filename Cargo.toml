@@ -28,4 +28,4 @@ incremental = false
 debug = false
 
 [workspace.dependencies]
-bevy = {version = "0.16.0", default-features = false}
+bevy = {version = "0.17.0", default-features = false}

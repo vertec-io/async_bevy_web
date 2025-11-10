@@ -10,9 +10,10 @@ Async Bevy Web provides several plugins for Bevy for creating real-time, interac
 
 ## Version Compatibility
 
-| async-bevy-web version | bevy version | bevy-tokio-tasks version | bevy-leptos version |
-|---|---|---|---|
-| 0.3.0 | 0.16.0 | 0.16.0 | 0.1.0 |
+| async-bevy-web version | bevy version | bevy-tokio-tasks version | bevy-leptos version | Rust version |
+|---|---|---|---|---|
+| 0.3.0 | 0.17.0 | 0.17.0 | 0.1.0 | nightly (1.88.0+) |
+| 0.3.0 | 0.16.0 | 0.16.0 | 0.1.0 | stable |
 
 ## Getting Started
 
@@ -21,6 +22,7 @@ To get the application running on your local machine, follow these steps:
 ### Prerequisites
 
 - Ensure you have Rust and Cargo installed on your machine. If not, you can install them by following the instructions on the [official Rust website](https://www.rust-lang.org/tools/install).
+- **Note:** This project requires Rust nightly (1.88.0 or later) due to Bevy 0.17's use of Rust Edition 2024 features. The project includes a `rust-toolchain.toml` file that will automatically use the correct toolchain.
 
 ### Setup
 

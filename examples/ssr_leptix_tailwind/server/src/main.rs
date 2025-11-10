@@ -17,7 +17,7 @@ fn main () {
 
     // Base ABW plugins
     app.add_systems(Startup, print_running)
-       .add_plugins(ABWConfigPlugin::new(60.0))
+       .add_plugins(ABWConfigPlugin::fixed(60.0))
        .add_plugins(LeptosAppPlugin::new(start_leptos_app()));
 
     // Networking plugins    

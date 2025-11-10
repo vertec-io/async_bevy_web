@@ -1,5 +1,5 @@
 // use leptos::html::html;
-use leptos::*;
+use leptos::prelude::*;
 use leptos_use::{
     use_color_mode_with_options, use_cycle_list_with_options, ColorMode, UseColorModeOptions,
     UseColorModeReturn, UseCycleListOptions, UseCycleListReturn,
@@ -33,7 +33,7 @@ pub fn ToggleTheme() -> impl IntoView {
     );
 
     view! {
-        <Html lang="en" class=move || mode.get().to_string() />    
+        <Html attr:lang="en" attr:class=move || mode.get().to_string() />
         <button class="bg-primary text-primary-foreground rounded p-2 font-extrabold" on:click=move |_| next()>
         {move || format!("Color Theme: {}", state.get())}
         </button>
